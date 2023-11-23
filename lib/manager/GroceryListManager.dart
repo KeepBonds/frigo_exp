@@ -97,9 +97,12 @@ class GroceryListManager {
     ).call();
 
     if(list != null) {
-      Iterable<GroceryList> listIte = lists.where((element) => list.ragicId == element.ragicId);
-      listIte.first.date = todayDate;
-      listIte.first.items = items; ICI IL FAUT QUE JUPDATE LES RAGICID
+      List<GroceryList> listIte = lists.where((element) => list.ragicId == element.ragicId).toList();
+      if(listIte.isNotEmpty) {
+        listIte[0] = GroceryList.fromApi(saveResponse.data['data']);
+      }
+      //listIte.first.date = todayDate;
+      //listIte.first.items = items; ICI IL FAUT QUE JUPDATE LES RAGICID
     } else {
       GroceryList newList = GroceryList(
         ragicId: saveResponse.data["ragicId"] ?? -1,
