@@ -85,6 +85,7 @@ class GroceryListManager {
       if(items[i].ragicId == -1) {
         items[i].ragicId = -(1000-i);
       }
+      print(items[i].toApi().toString());
       subTableData[items[i].ragicId.toString()] = items[i].toApi();
     }
     data['_subtable_1000314'] = subTableData;
@@ -97,12 +98,10 @@ class GroceryListManager {
     ).call();
 
     if(list != null) {
-      List<GroceryList> listIte = lists.where((element) => list.ragicId == element.ragicId).toList();
-      if(listIte.isNotEmpty) {
-        listIte[0] = GroceryList.fromApi(saveResponse.data['data']);
+      int ind = lists.indexWhere((element) => list.ragicId == element.ragicId);
+      if(ind != -1) {
+        lists[ind] = GroceryList.fromApi(saveResponse.data['data']);
       }
-      //listIte.first.date = todayDate;
-      //listIte.first.items = items; ICI IL FAUT QUE JUPDATE LES RAGICID
     } else {
       GroceryList newList = GroceryList(
         ragicId: saveResponse.data["ragicId"] ?? -1,

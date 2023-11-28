@@ -3,6 +3,13 @@ import 'package:frigo_exp/manager/manager.dart';
 import '../elements/elements.dart';
 import '../objects/objects.dart';
 
+class GroceryItemController {
+  GroceryItem item;
+  TextEditingController controller;
+
+  GroceryItemController(this.item, this.controller);
+}
+
 class GroceryListAddScreen extends StatefulWidget {
   final GroceryList? groceryList;
   const GroceryListAddScreen({
@@ -17,18 +24,19 @@ class GroceryListAddScreen extends StatefulWidget {
 class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
 
   List<GroceryItem> items = [];
-  List<TextEditingController> controllers = [];
+  List<GroceryItemController> controllers = [];
 
   @override
   void initState() {
     super.initState();
     if(widget.groceryList != null) {
       items.addAll(widget.groceryList!.items);
+      items.sort((a, b) => a.seq.compareTo(b.seq));
     }
     for(GroceryItem item in items) {
-      controllers.add(TextEditingController(text: item.name));
+      controllers.add(GroceryItemController(item, TextEditingController(text: item.name)));
     }
-    controllers.add(TextEditingController(text: ""));
+    controllers.add(GroceryItemController(GroceryItem.mock(), TextEditingController(text: "")));
   }
 
   onChanged(val, index) {
@@ -37,23 +45,53 @@ class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
         ragicId: -1,
         listId: widget.groceryList?.ragicId ?? -1,
         name: val ?? "",
-        checked: false
+        checked: false,
+        seq: index
       );
-      items.add(newItem);
-      controllers.add(TextEditingController(text: ""));
+      controllers[index].item = newItem;
+      controllers.add(GroceryItemController(GroceryItem.mock(), TextEditingController(text: "")));
     } else {
-      items[index].name = val ?? "";
+      controllers[index].item.name = val ?? "";
     }
     setState(() {});
   }
 
-  onSave() {
-    if(widget.groceryList != null) {
-      widget.groceryList!.items = items;
-      GroceryListManager.getState().saveListToApi(widget.groceryList, items);
-    } else {
-      GroceryListManager.getState().saveListToApi(null, items);
+  onChecked(bool? check, int index) {
+    if(check == null) return;
+
+    controllers[index].item.checked = check;
+    setState(() {});
+  }
+
+  onChangedSeq(int? newSeq, int index) {
+    if(newSeq == null) return;
+
+    if (index < newSeq) {
+      newSeq -= 1;
     }
+    final GroceryItemController item = controllers.removeAt(index);
+    controllers.insert(newSeq, item);
+
+    for(int  i = 0 ; i < controllers.length ; i++) {
+      controllers[i].item.seq = i;
+    }
+
+    setState(() {});
+  }
+
+  onSave() {
+    List<GroceryItem> saveItems = [];
+    for(GroceryItemController controller in controllers) {
+      if(controller.item.ragicId == -100000000) continue;
+      saveItems.add(controller.item);
+    }
+
+    if(widget.groceryList != null) {
+      GroceryListManager.getState().saveListToApi(widget.groceryList, saveItems);
+    } else {
+      GroceryListManager.getState().saveListToApi(null, saveItems);
+    }
+    Navigator.pop(context);
   }
 
   @override
@@ -78,19 +116,44 @@ class _GroceryListAddScreenView extends WidgetView<GroceryListAddScreen, _Grocer
         actions: [
           TextButton(
               onPressed: state.onSave,
-              child: const Text("Edit")
+              child: const Text("Save")
           ),
         ],
       ),
-      body: ListView.builder(
+      body: ReorderableListView.builder(
         itemCount: state.controllers.length,
         itemBuilder: (context, index) {
-          return TextField(
-            controller: state.controllers[index],
-            onChanged: (String? val) => state.onChanged(val, index),
+          return ListTile(
+            key: Key('$index'),
+            title: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 11),
+                  child: Icon(Icons.drag_indicator),
+                ),
+                Checkbox(
+                    value: state.controllers[index].item.checked,
+                    onChanged: (bool? check) => state.onChecked(check, index)
+                ),
+                Expanded(
+                  child: TextField(
+                    maxLines: null,
+                    decoration: const InputDecoration(
+                      focusedBorder: InputBorder.none,
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none
+                    ),
+                    controller: state.controllers[index].controller,
+                    onChanged: (String? val) => state.onChanged(val, index),
+                  ),
+                )
+              ],
+            ),
           );
-        }
-      ),
+        },
+        onReorder:  (int oldIndex, int newIndex) => state.onChangedSeq(newIndex, oldIndex),
+      )
     );
   }
 }

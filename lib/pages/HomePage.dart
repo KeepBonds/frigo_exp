@@ -41,7 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _navigateToAddGList() async {
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => GroceryListAddScreen()),
+      MaterialPageRoute(builder: (context) => const GroceryListAddScreen()),
     ).whenComplete(() {
       setState(() {});
     });
