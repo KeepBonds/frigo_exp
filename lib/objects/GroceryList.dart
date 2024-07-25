@@ -11,9 +11,17 @@ class GroceryList {
     required this.items,
   });
 
+  String getItemDisplay() {
+    String layout = "";
+    for(GroceryItem item in items) {
+      layout += ("${item.name}\n");
+    }
+    return layout;
+  }
+
   GroceryList.fromApi(Map<String, dynamic> json)
       : ragicId = json['_ragicId'] ?? -1,
-        date = json['1000934'] ?? "",
+        date = json['1000310'] ?? "",
         items = processItems(json['_subtable_1000314'], json['_ragicId'] ?? -1);
 
   static List<GroceryItem> processItems(Map<String, dynamic>? subTable, int parentId) {

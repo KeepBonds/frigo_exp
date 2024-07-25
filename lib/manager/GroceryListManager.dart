@@ -78,7 +78,7 @@ class GroceryListManager {
     Map<String, dynamic> data = {};
     data['_ragicId'] = list?.ragicId ?? -1;
     data['_star'] = false;
-    data["1000934"] = todayDate;
+    data["1000310"] = todayDate;
 
     Map<String, dynamic> subTableData = {};
     for(int i = 0 ; i<items.length ; i++) {
