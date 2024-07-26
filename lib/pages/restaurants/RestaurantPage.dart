@@ -1,9 +1,9 @@
 import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import '../elements/elements.dart';
-import '../manager/manager.dart';
-import '../objects/objects.dart';
+import '../../elements/elements.dart';
+import '../../manager/manager.dart';
+import '../../objects/objects.dart';
 import 'RestaurantAddScreen.dart';
 
 class RestaurantPage extends StatefulWidget {

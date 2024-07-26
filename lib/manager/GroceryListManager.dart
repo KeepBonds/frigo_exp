@@ -72,12 +72,13 @@ class GroceryListManager {
     await StorageHelperManager.setString(StorageKeys.groceryList, listoJson);
   }
 
-  saveListToApi(GroceryList? list, List<GroceryItem> items) async {
+  saveListToApi(GroceryList? list, String name, List<GroceryItem> items) async {
     String todayDate = DateFormat("yyyy/MM/dd").format(DateTime.now());
     
     Map<String, dynamic> data = {};
     data['_ragicId'] = list?.ragicId ?? -1;
     data['_star'] = false;
+    data["1000351"] = name;
     data["1000310"] = todayDate;
 
     Map<String, dynamic> subTableData = {};
@@ -85,7 +86,6 @@ class GroceryListManager {
       if(items[i].ragicId == -1) {
         items[i].ragicId = -(1000-i);
       }
-      print(items[i].toApi().toString());
       subTableData[items[i].ragicId.toString()] = items[i].toApi();
     }
     data['_subtable_1000314'] = subTableData;
@@ -105,6 +105,7 @@ class GroceryListManager {
     } else {
       GroceryList newList = GroceryList(
         ragicId: saveResponse.data["ragicId"] ?? -1,
+        name: name,
         date: todayDate,
         items: items,
       );

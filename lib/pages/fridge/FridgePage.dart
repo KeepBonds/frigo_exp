@@ -1,6 +1,6 @@
-import '../elements/elements.dart';
-import '../manager/manager.dart';
-import '../objects/objects.dart';
+import '../../elements/elements.dart';
+import '../../manager/manager.dart';
+import '../../objects/objects.dart';
 
 class FridgePage extends StatefulWidget {
   @override

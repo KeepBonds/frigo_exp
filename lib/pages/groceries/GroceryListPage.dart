@@ -1,7 +1,7 @@
 import 'package:frigo_exp/objects/objects.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import '../elements/elements.dart';
-import '../manager/manager.dart';
+import '../../elements/elements.dart';
+import '../../manager/manager.dart';
 import 'GroceryListAddScreen.dart';
 
 class GroceryListPage extends StatefulWidget {

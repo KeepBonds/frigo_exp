@@ -5,9 +5,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:frigo_exp/helper/FileHelper.dart';
 import 'package:frigo_exp/manager/manager.dart';
 import 'package:image_picker/image_picker.dart';
-import '../elements/elements.dart';
-import '../helper/UploadFileHelper.dart';
-import '../objects/objects.dart';
+import '../../elements/elements.dart';
+import '../../helper/UploadFileHelper.dart';
+import '../../objects/objects.dart';
 
 class RestaurantAddScreen extends StatefulWidget {
   final Restaurant? restaurant;

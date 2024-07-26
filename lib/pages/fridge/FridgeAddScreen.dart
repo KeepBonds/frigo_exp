@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frigo_exp/manager/FridgeManager.dart';
-import '../Constants.dart';
-import '../objects/FridgeProduct.dart';
+import '../../Constants.dart';
+import '../../objects/FridgeProduct.dart';
 
 class FridgeAddScreen extends StatefulWidget {
   const FridgeAddScreen({super.key});

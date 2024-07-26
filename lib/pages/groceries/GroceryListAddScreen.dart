@@ -1,7 +1,7 @@
 import 'package:frigo_exp/manager/manager.dart';
 
-import '../elements/elements.dart';
-import '../objects/objects.dart';
+import '../../elements/elements.dart';
+import '../../objects/objects.dart';
 
 class GroceryItemController {
   GroceryItem item;
@@ -22,6 +22,8 @@ class GroceryListAddScreen extends StatefulWidget {
 }
 
 class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
+
+  TextEditingController nameController = TextEditingController();
 
   List<GroceryItem> items = [];
   List<GroceryItemController> controllers = [];
@@ -80,6 +82,8 @@ class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
   }
 
   onSave() {
+    String name = nameController.text;
+
     List<GroceryItem> saveItems = [];
     for(GroceryItemController controller in controllers) {
       if(controller.item.ragicId == -100000000) continue;
@@ -87,9 +91,9 @@ class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
     }
 
     if(widget.groceryList != null) {
-      GroceryListManager.getState().saveListToApi(widget.groceryList, saveItems);
+      GroceryListManager.getState().saveListToApi(widget.groceryList, name, saveItems);
     } else {
-      GroceryListManager.getState().saveListToApi(null, saveItems);
+      GroceryListManager.getState().saveListToApi(null, name, saveItems);
     }
     Navigator.pop(context);
   }
@@ -120,39 +124,68 @@ class _GroceryListAddScreenView extends WidgetView<GroceryListAddScreen, _Grocer
           ),
         ],
       ),
-      body: ReorderableListView.builder(
-        itemCount: state.controllers.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            key: Key('$index'),
-            title: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 11),
-                  child: Icon(Icons.drag_indicator),
-                ),
-                Checkbox(
-                    value: state.controllers[index].item.checked,
-                    onChanged: (bool? check) => state.onChecked(check, index)
-                ),
-                Expanded(
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+                child: Container(
+                  key: const Key('t_field'),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
                   child: TextField(
-                    maxLines: null,
                     decoration: const InputDecoration(
-                      focusedBorder: InputBorder.none,
-                      border: InputBorder.none,
-                      enabledBorder: InputBorder.none
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        contentPadding: EdgeInsets.zero,
+                        hintText: "Title"
                     ),
-                    controller: state.controllers[index].controller,
-                    onChanged: (String? val) => state.onChanged(val, index),
+                    controller: state.nameController,
                   ),
                 )
-              ],
             ),
-          );
-        },
-        onReorder:  (int oldIndex, int newIndex) => state.onChangedSeq(newIndex, oldIndex),
+            ReorderableListView.builder(
+              shrinkWrap: true,
+              itemCount: state.controllers.length,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return ListTile(
+                  key: Key('$index'),
+                  minLeadingWidth: 0.0,
+                  contentPadding: EdgeInsets.zero,
+                  title: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ReorderableDragStartListener(
+                        index: index,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 16),
+                          child: const Icon(Icons.drag_indicator),
+                        ),
+                      ),
+                      Checkbox(
+                          value: state.controllers[index].item.checked,
+                          onChanged: (bool? check) => state.onChecked(check, index)
+                      ),
+                      Expanded(
+                        child: TextField(
+                          maxLines: null,
+                          decoration: const InputDecoration(
+                              focusedBorder: InputBorder.none,
+                              border: InputBorder.none,
+                              enabledBorder: InputBorder.none
+                          ),
+                          controller: state.controllers[index].controller,
+                          onChanged: (String? val) => state.onChanged(val, index),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              },
+              onReorder:  (int oldIndex, int newIndex) => state.onChangedSeq(newIndex, oldIndex),
+            )
+          ],
+        ),
       )
     );
   }

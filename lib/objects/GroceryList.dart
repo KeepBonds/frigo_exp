@@ -2,11 +2,13 @@ import 'GroceryItem.dart';
 
 class GroceryList {
   int ragicId = -1;
+  String name = "";
   String date = "";
   List<GroceryItem> items = [];
 
   GroceryList({
     required this.ragicId,
+    required this.name,
     required this.date,
     required this.items,
   });
@@ -21,6 +23,7 @@ class GroceryList {
 
   GroceryList.fromApi(Map<String, dynamic> json)
       : ragicId = json['_ragicId'] ?? -1,
+        name = json['1000351'] ?? "",
         date = json['1000310'] ?? "",
         items = processItems(json['_subtable_1000314'], json['_ragicId'] ?? -1);
 
@@ -38,6 +41,7 @@ class GroceryList {
   static GroceryList fromJson(Map<String, dynamic> json) {
     return GroceryList(
       ragicId: json["ragicId"],
+      name: json["name"],
       date: json["date"],
       items: (json['items'] as List<dynamic>?)
         ?.map((item) => GroceryItem.fromJson(item))
@@ -47,6 +51,7 @@ class GroceryList {
 
   Map<String, dynamic> toJson() =>{
     "ragicId": ragicId,
+    "name": name,
     "date": date,
     "items": items.map((item) => item.toJson()).toList(),
   };

@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frigo_exp/pages/RestaurantPage.dart';
-import 'FridgeAddScreen.dart';
+import 'pages.dart';
 import '../manager/manager.dart';
-import 'FridgePage.dart';
-import 'GroceryListAddScreen.dart';
-import 'GroceryListPage.dart';
-import 'RecipePage.dart';
-import 'RestaurantAddScreen.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
