@@ -15,7 +15,10 @@ class GroceryList {
 
   String getItemDisplay() {
     String layout = "";
-    for(GroceryItem item in items) {
+    List<GroceryItem> sortedList = List.from(items);
+    sortedList.sort((a, b) => a.seq.compareTo(b.seq));
+
+    for(GroceryItem item in sortedList) {
       layout += ("${item.name}\n");
     }
     return layout;

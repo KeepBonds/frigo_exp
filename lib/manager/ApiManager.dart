@@ -44,7 +44,7 @@ class ApiManager {
   Future<Response> call() async {
     Dio dio = Dio();
     dio.options.baseUrl = url;
-    dio.interceptors.add(LogInterceptor(responseBody: true));
+    dio.interceptors.add(LogInterceptor(request: true, requestBody: true, responseBody: true));
     dio.options.headers['Authorization'] = "Basic " + "eVgvaDh5N3lGN3N6cFBCdGlWeU55QWMyUkRJZDA0OS9UMXd3WUNrSCsrdkNPVDVnc2IyNlBab1hWNkZyTGxzMA==";
     (dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate =
         (HttpClient client) {

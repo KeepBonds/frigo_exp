@@ -45,7 +45,7 @@ class _RecipePageView extends WidgetView<RecipePage, _RecipePageController> {
   Widget getMealTypeIcon(MealType type) {
     switch(type) {
       case MealType.PtitDej:
-        return const Icon(Icons.rice_bowl);
+        return const Icon(Icons.emoji_food_beverage);
       case MealType.Dessert:
         return const Icon(Icons.icecream);
       case MealType.Repas:
@@ -68,14 +68,14 @@ class _RecipePageView extends WidgetView<RecipePage, _RecipePageController> {
               RecipeChipFilter(
                 selected: state.mealTypeFiler == MealType.PtitDej,
                 text: "Breakfast",
-                icon: Icons.rice_bowl,
+                icon: Icons.coffee,
                 onTap: () => state.onPressedFilter(MealType.PtitDej),
               ),
               const SizedBox(width: 8.0,),
               RecipeChipFilter(
                 selected: state.mealTypeFiler == MealType.Repas,
                 text: "Meal",
-                icon: Icons.dinner_dining,
+                icon: Icons.lunch_dining,
                 onTap: () => state.onPressedFilter(MealType.Repas),
               ),
               const SizedBox(width: 8.0,),
@@ -246,7 +246,7 @@ class RecipeChipFilter extends StatelessWidget {
         label: Row(
           children: [
             Text(text, style: selected ? selectedTextStyle : unSelectedTextStyle,),
-            const SizedBox(width: 4.0,),
+            const SizedBox(width: 8.0,),
             Icon(icon, color: selected ? Colors.red : Colors.black87,),
           ],
         ),

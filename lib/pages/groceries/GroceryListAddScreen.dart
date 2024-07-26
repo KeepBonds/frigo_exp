@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:frigo_exp/manager/manager.dart';
 
 import '../../elements/elements.dart';
@@ -23,7 +24,7 @@ class GroceryListAddScreen extends StatefulWidget {
 
 class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
 
-  TextEditingController nameController = TextEditingController();
+  late TextEditingController nameController;
 
   List<GroceryItem> items = [];
   List<GroceryItemController> controllers = [];
@@ -31,31 +32,70 @@ class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
   @override
   void initState() {
     super.initState();
+    nameController = TextEditingController(text: widget.groceryList != null ? widget.groceryList!.name : "");
+
     if(widget.groceryList != null) {
       items.addAll(widget.groceryList!.items);
       items.sort((a, b) => a.seq.compareTo(b.seq));
     }
+
+    const String invisibleChar = '\u200B';
     for(GroceryItem item in items) {
-      controllers.add(GroceryItemController(item, TextEditingController(text: item.name)));
+      controllers.add(GroceryItemController(item, TextEditingController(text: invisibleChar + item.name)));
     }
-    controllers.add(GroceryItemController(GroceryItem.mock(), TextEditingController(text: "")));
+    controllers.add(GroceryItemController(GroceryItem.mock(), TextEditingController(text: invisibleChar)));
   }
 
   onChanged(val, index) {
+    if(val == null) return;
+    print("VAL:" + val + "|  SS? | " + val.length.toString()  );
+    if(val.contains("\n")) {
+      controllers[index].item.name = val.replaceAll("\n", "");
+      controllers[index].controller.text = val.replaceAll("\n", "");
+      onAddNewLine(val, index);
+      setState(() {});
+      return;
+    }
+    if(val.length == 0) {
+      controllers.removeAt(index);
+      setState(() {});
+      return;
+    }
+
     if(index == controllers.length-1) {
-      GroceryItem newItem = GroceryItem(
-        ragicId: -1,
-        listId: widget.groceryList?.ragicId ?? -1,
-        name: val ?? "",
-        checked: false,
-        seq: index
-      );
-      controllers[index].item = newItem;
-      controllers.add(GroceryItemController(GroceryItem.mock(), TextEditingController(text: "")));
+      onAddNewLine(val, index);
     } else {
       controllers[index].item.name = val ?? "";
     }
     setState(() {});
+  }
+
+  onAddNewLine(val, index) {
+    int newLineIndex = index;
+    if(index == controllers.length - 1) {
+      newLineIndex = index + 1;
+    } else {
+      newLineIndex = index + 1;
+      for(GroceryItemController gc in controllers) {
+        gc.item.seq = gc.item.seq+1;
+      }
+    }
+
+    GroceryItem newItem = GroceryItem(
+        ragicId: -1,
+        listId: widget.groceryList?.ragicId ?? -1,
+        name: val ?? "",
+        checked: false,
+        seq: newLineIndex
+    );
+    controllers[index].item = newItem;
+    const String invisibleChar = '\u200B';
+
+    if(index == controllers.length - 1) {
+      controllers.add(GroceryItemController(GroceryItem.mock(), TextEditingController(text: invisibleChar)));
+    } else {
+      controllers.insert(newLineIndex, GroceryItemController(GroceryItem.mock(), TextEditingController(text: invisibleChar)));
+    }
   }
 
   onChecked(bool? check, int index) {
@@ -133,13 +173,14 @@ class _GroceryListAddScreenView extends WidgetView<GroceryListAddScreen, _Grocer
                   key: const Key('t_field'),
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
                   child: TextField(
+                    controller: state.nameController,
+                    textCapitalization: TextCapitalization.sentences,
                     decoration: const InputDecoration(
                         enabledBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,
                         contentPadding: EdgeInsets.zero,
                         hintText: "Title"
                     ),
-                    controller: state.nameController,
                   ),
                 )
             ),
@@ -150,35 +191,45 @@ class _GroceryListAddScreenView extends WidgetView<GroceryListAddScreen, _Grocer
               itemBuilder: (context, index) {
                 return ListTile(
                   key: Key('$index'),
+                  dense: true,
                   minLeadingWidth: 0.0,
+                  minVerticalPadding: 0.0,
                   contentPadding: EdgeInsets.zero,
-                  title: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ReorderableDragStartListener(
-                        index: index,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 16),
-                          child: const Icon(Icons.drag_indicator),
-                        ),
-                      ),
-                      Checkbox(
-                          value: state.controllers[index].item.checked,
-                          onChanged: (bool? check) => state.onChecked(check, index)
-                      ),
-                      Expanded(
-                        child: TextField(
-                          maxLines: null,
-                          decoration: const InputDecoration(
-                              focusedBorder: InputBorder.none,
-                              border: InputBorder.none,
-                              enabledBorder: InputBorder.none
+                  title: Container(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ReorderableDragStartListener(
+                          index: index,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 16),
+                            child: const Icon(Icons.drag_indicator),
                           ),
-                          controller: state.controllers[index].controller,
-                          onChanged: (String? val) => state.onChanged(val, index),
                         ),
-                      )
-                    ],
+                        Checkbox(
+                            value: state.controllers[index].item.checked,
+                            onChanged: (bool? check) => state.onChecked(check, index)
+                        ),
+                        Expanded(
+                          child: SuggestionTextField(
+                            textEditingController: state.controllers[index].controller,
+                            index: index,
+                            onChanged: state.onChanged,
+                          )
+                          //TextField(
+                          //  maxLines: null,
+                          //  textCapitalization: TextCapitalization.sentences,
+                          //  decoration: const InputDecoration(
+                          //      focusedBorder: InputBorder.none,
+                          //      border: InputBorder.none,
+                          //      enabledBorder: InputBorder.none
+                          //  ),
+                          //  controller: state.controllers[index].controller,
+                          //  onChanged: (String? val) => state.onChanged(val, index),
+                          //),
+                        )
+                      ],
+                    ),
                   ),
                 );
               },
@@ -187,6 +238,59 @@ class _GroceryListAddScreenView extends WidgetView<GroceryListAddScreen, _Grocer
           ],
         ),
       )
+    );
+  }
+}
+
+class SuggestionTextField extends StatefulWidget {
+  final TextEditingController textEditingController;
+  final int index;
+  final Function(String?, int) onChanged;
+
+  SuggestionTextField({super.key, required this.textEditingController, required this.index, required this.onChanged});
+
+  @override
+  State<SuggestionTextField> createState() => _SuggestionTextFieldState();
+}
+
+class _SuggestionTextFieldState extends State<SuggestionTextField> {
+  String editingValue = "";
+  String currentWord = "";
+
+  @override
+  void initState() {
+    editingValue = widget.textEditingController.text;
+    widget.textEditingController.addListener(() {
+      if (widget.textEditingController.selection.base.offset > 0 &&
+          editingValue != widget.textEditingController.text) {
+        String currentLetter = widget.textEditingController.text.substring(
+            widget.textEditingController.selection.base.offset - 1,
+            widget.textEditingController.selection.base.offset);
+        if(currentLetter == " ") {
+          currentWord = "";
+        } else if (editingValue.length > widget.textEditingController.text.length && currentWord.isNotEmpty){
+          currentWord = currentWord.substring(0, currentWord.length - 1);
+        }  else {
+          currentWord = currentWord + currentLetter;
+        }
+      }
+      editingValue = widget.textEditingController.text;
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      maxLines: null,
+      textCapitalization: TextCapitalization.sentences,
+      decoration: const InputDecoration(
+          focusedBorder: InputBorder.none,
+          border: InputBorder.none,
+          enabledBorder: InputBorder.none
+      ),
+      controller: widget.textEditingController,
+      onChanged: (String? val) => widget.onChanged(val, widget.index),
     );
   }
 }
