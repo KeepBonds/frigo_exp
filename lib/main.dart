@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frigo_exp/pages/fridge/FridgeAddScreen.dart';
-import 'package:frigo_exp/objects/FridgeProduct.dart';
 import 'package:frigo_exp/pages/HomePage.dart';
-import 'manager/FridgeManager.dart';
 import 'cache/StorageManager.dart';
 
 void main() async {

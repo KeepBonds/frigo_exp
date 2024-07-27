@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
-import 'package:frigo_exp/manager/manager.dart';
-
+import '../../Constants.dart';
+import '../../manager/manager.dart';
 import '../../elements/elements.dart';
 import '../../objects/objects.dart';
 
@@ -46,7 +46,7 @@ class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
     controllers.add(GroceryItemController(GroceryItem.mock(), TextEditingController(text: invisibleChar)));
   }
 
-  onChanged(val, index) {
+  onChanged(String? val, int index) {
     if(val == null) return;
     print("VAL:" + val + "|  SS? | " + val.length.toString()  );
     if(val.contains("\n")) {
@@ -274,10 +274,72 @@ class _SuggestionTextFieldState extends State<SuggestionTextField> {
           currentWord = currentWord + currentLetter;
         }
       }
+      if(currentWord.isNotEmpty) {
+        showOverlay(context, () {FocusScope.of(context).requestFocus(new FocusNode());}, overLayList());
+      }
       editingValue = widget.textEditingController.text;
     });
     super.initState();
   }
+
+  overLayList() {
+    List<FridgeProduct> products = getList();
+
+    List<Widget> list = [];
+    for (int i = 0; i < products.length; i++) {
+      if(products[i].name.toLowerCase().startsWith(currentWord.toLowerCase())) {
+        list.add(InkWell(
+            child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                alignment: Alignment.center,
+                child: Text(
+                  products[i].name,
+                  style: const TextStyle(color: Color.fromRGBO(80, 80, 80, 1)),
+                ),),
+            onTap: () {
+              String newCurrentWord = currentWord;
+              currentWord = "";
+              String newValue = widget.textEditingController.text.replaceAll(newCurrentWord, products[i].name);
+              widget.textEditingController.text = newValue;
+              widget.onChanged(newValue, widget.index);
+              hideOverlay();
+            }
+        ));
+      }
+    }
+    return ListView(scrollDirection: Axis.horizontal, children: list);
+  }
+
+  OverlayEntry? _overlayEntry;
+  showOverlay(BuildContext context, Function() editField, Widget? header) {
+    try{
+      _overlayEntry?.remove();
+    } catch(e) {}
+    OverlayState? os = Overlay.of(context);
+
+    _overlayEntry = OverlayEntry(builder: (context) {
+      return KeyboardOverlay(
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+          hideOverlay();
+        },
+        header: header,
+      );
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      os.insert(_overlayEntry!);
+    });
+  }
+
+  void hideOverlay() {
+    if(_overlayEntry == null) {
+      return;
+    }
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -294,3 +356,35 @@ class _SuggestionTextFieldState extends State<SuggestionTextField> {
     );
   }
 }
+
+
+class KeyboardOverlay extends StatelessWidget {
+  final Function() onTap;
+  final Widget? header;
+
+  const KeyboardOverlay(
+      {Key? key, required this.onTap, this.header})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      bottom: MediaQuery.of(context).viewInsets.bottom,
+      left: 0,
+      right: 0,
+      child: Material(
+        child: Column(
+          children: <Widget>[
+            if(header != null)
+              Container(
+                  height: 50,
+                  padding: const EdgeInsets.only(right: 10.0, left: 10.0),
+                  child: header
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
