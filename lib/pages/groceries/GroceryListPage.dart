@@ -32,6 +32,22 @@ class _GroceryListPageController extends State<GroceryListPage> {
     });
   }
 
+  onLongPress(GroceryList list) async {
+    bool confirm = await showDialog(context: context, builder: (context) {
+      return AlertDialog(
+        title: const Text("Delete ?"),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text("Yes")),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text("No")),
+        ],
+      );
+    });
+    if(confirm) {
+      await GroceryListManager.getState().deleteAPI(list);
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) => _GroceryListPageView(this);
 }
@@ -56,13 +72,21 @@ class _GroceryListPageView extends WidgetView<GroceryListPage, _GroceryListPageC
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        if(item.name.isNotEmpty) Text(item.name, style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),),
-                        Text(item.getItemDisplay()),
-                        Text(item.date)
+                        if(item.name.isNotEmpty) Text(item.name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                        const SizedBox(height: 2,),
+                        Container(
+                          padding: EdgeInsets.only(left: 6.0, right: 6.0, top: 2.0),
+                          child: Text(item.getItemDisplay()),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Text(item.date, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300, color: Colors.black54)),
+                        )
                       ],
                     ),
                   ),
                   onTap: () => state.onTap(item),
+                  onLongPress: () => state.onLongPress(item),
                 )
             );
           }).toList(),

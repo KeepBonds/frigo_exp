@@ -26,12 +26,15 @@ class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
 
   late TextEditingController nameController;
 
+  late ScrollController scrollController;
+
   List<GroceryItem> items = [];
   List<GroceryItemController> controllers = [];
 
   @override
   void initState() {
     super.initState();
+    scrollController = ScrollController();
     nameController = TextEditingController(text: widget.groceryList != null ? widget.groceryList!.name : "");
 
     if(widget.groceryList != null) {
@@ -138,6 +141,45 @@ class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
     Navigator.pop(context);
   }
 
+  OverlayEntry? _overlayEntry;
+  showOverlay(Widget? header) {
+    if(header == null) {
+      hideOverlay();
+      return;
+    }
+    try{
+      _overlayEntry?.remove();
+    } catch(e) {}
+    OverlayState? os = Overlay.of(context);
+
+    _overlayEntry = OverlayEntry(builder: (context) {
+      return KeyboardOverlay(
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+          hideOverlay();
+        },
+        header: header,
+      );
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      os.insert(_overlayEntry!);
+    });
+  }
+
+  void hideOverlay() {
+    if(_overlayEntry == null) {
+      return;
+    }
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+  }
+
+  void scrollUp() {
+    print("SCROLL TO ${scrollController.offset - 50}");
+    scrollController.animateTo(scrollController.offset + 50, duration: Duration(milliseconds: 100), curve: Curves.fastOutSlowIn,);
+  }
+
   @override
   Widget build(BuildContext context) => _GroceryListAddScreenView(this);
 }
@@ -152,7 +194,10 @@ class _GroceryListAddScreenView extends WidgetView<GroceryListAddScreen, _Grocer
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           color: Colors.black87,
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            state.hideOverlay();
+            Navigator.pop(context);
+          }
         ),
         title: const Text('Edit', style: TextStyle(color: Colors.black87),),
         backgroundColor: Colors.transparent,
@@ -165,6 +210,7 @@ class _GroceryListAddScreenView extends WidgetView<GroceryListAddScreen, _Grocer
         ],
       ),
       body: SingleChildScrollView(
+        controller: state.scrollController,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -214,6 +260,10 @@ class _GroceryListAddScreenView extends WidgetView<GroceryListAddScreen, _Grocer
                           child: SuggestionTextField(
                             textEditingController: state.controllers[index].controller,
                             index: index,
+                            checked: state.controllers[index].item.checked,
+                            showOverlay: state.showOverlay,
+                            hideOverlay: state.hideOverlay,
+                            scrollUp: state.scrollUp,
                             onChanged: state.onChanged,
                           )
                           //TextField(
@@ -245,9 +295,21 @@ class _GroceryListAddScreenView extends WidgetView<GroceryListAddScreen, _Grocer
 class SuggestionTextField extends StatefulWidget {
   final TextEditingController textEditingController;
   final int index;
+  final bool checked;
+  final Function(Widget?) showOverlay;
+  final Function() hideOverlay;
+  final Function() scrollUp;
   final Function(String?, int) onChanged;
 
-  SuggestionTextField({super.key, required this.textEditingController, required this.index, required this.onChanged});
+  SuggestionTextField({
+    super.key, required this.textEditingController,
+    required this.index,
+    required this.checked,
+    required this.showOverlay,
+    required this.hideOverlay,
+    required this.scrollUp,
+    required this.onChanged
+  });
 
   @override
   State<SuggestionTextField> createState() => _SuggestionTextFieldState();
@@ -256,6 +318,8 @@ class SuggestionTextField extends StatefulWidget {
 class _SuggestionTextFieldState extends State<SuggestionTextField> {
   String editingValue = "";
   String currentWord = "";
+
+  FocusNode focusNode = FocusNode();
 
   @override
   void initState() {
@@ -274,15 +338,25 @@ class _SuggestionTextFieldState extends State<SuggestionTextField> {
           currentWord = currentWord + currentLetter;
         }
       }
+      print("Current Word $currentWord && ${currentWord.isEmpty}");
       if(currentWord.isNotEmpty) {
-        showOverlay(context, () {FocusScope.of(context).requestFocus(new FocusNode());}, overLayList());
+        widget.showOverlay(overLayList());
+      } else {
+        widget.hideOverlay();
       }
       editingValue = widget.textEditingController.text;
+    });
+
+    focusNode.addListener(() {
+      if(!focusNode.hasFocus) {
+        currentWord = "";
+        widget.hideOverlay();
+      }
     });
     super.initState();
   }
 
-  overLayList() {
+  Widget? overLayList() {
     List<FridgeProduct> products = getList();
 
     List<Widget> list = [];
@@ -302,44 +376,16 @@ class _SuggestionTextFieldState extends State<SuggestionTextField> {
               String newValue = widget.textEditingController.text.replaceAll(newCurrentWord, products[i].name);
               widget.textEditingController.text = newValue;
               widget.onChanged(newValue, widget.index);
-              hideOverlay();
+              widget.hideOverlay();
             }
         ));
       }
     }
+    if(list.isEmpty) {
+      return null;
+    }
     return ListView(scrollDirection: Axis.horizontal, children: list);
   }
-
-  OverlayEntry? _overlayEntry;
-  showOverlay(BuildContext context, Function() editField, Widget? header) {
-    try{
-      _overlayEntry?.remove();
-    } catch(e) {}
-    OverlayState? os = Overlay.of(context);
-
-    _overlayEntry = OverlayEntry(builder: (context) {
-      return KeyboardOverlay(
-        onTap: () {
-          FocusScope.of(context).requestFocus(FocusNode());
-          hideOverlay();
-        },
-        header: header,
-      );
-    });
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      os.insert(_overlayEntry!);
-    });
-  }
-
-  void hideOverlay() {
-    if(_overlayEntry == null) {
-      return;
-    }
-    _overlayEntry?.remove();
-    _overlayEntry = null;
-  }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -351,8 +397,22 @@ class _SuggestionTextFieldState extends State<SuggestionTextField> {
           border: InputBorder.none,
           enabledBorder: InputBorder.none
       ),
+      style: widget.checked ? const TextStyle(decoration: TextDecoration.lineThrough) : null,
+      focusNode: focusNode,
       controller: widget.textEditingController,
-      onChanged: (String? val) => widget.onChanged(val, widget.index),
+      onChanged: (String? val) {
+        double offset = focusNode.offset.dy;
+        final viewInsets = EdgeInsets.fromViewPadding(WidgetsBinding.instance.window.viewInsets,WidgetsBinding.instance.window.devicePixelRatio);
+        double screenHeight = MediaQuery.of(context).size.height;
+
+        double diff = (screenHeight - offset - 20.0);
+        double keyboard = viewInsets.bottom + 50;
+
+        if(diff < keyboard) {
+          widget.scrollUp();
+        }
+        widget.onChanged(val, widget.index);
+      }
     );
   }
 }

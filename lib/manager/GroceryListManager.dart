@@ -73,7 +73,7 @@ class GroceryListManager {
   }
 
   saveListToApi(GroceryList? list, String name, List<GroceryItem> items) async {
-    String todayDate = DateFormat("yyyy/MM/dd").format(DateTime.now());
+    String todayDate = DateFormat("yyyy/MM/dd hh:mm:ss").format(DateTime.now());
     
     Map<String, dynamic> data = {};
     data['_ragicId'] = list?.ragicId ?? -1;
@@ -111,6 +111,16 @@ class GroceryListManager {
       );
       _lists.add(newList);
     }
+    saveListToCache();
+  }
+
+
+  Future<void> deleteAPI(GroceryList list) async {
+    Response deleteResponse = await ApiManager(
+        apiMethod: ApiMethod.DELETE,
+        url: "https://www.ragic.com/acdu92/grocery/4/${list.ragicId}",
+    ).call();
+    _lists.removeWhere((l) => l.ragicId == list.ragicId);
     saveListToCache();
   }
 }

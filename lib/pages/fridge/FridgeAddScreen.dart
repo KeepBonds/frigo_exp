@@ -201,7 +201,7 @@ class FridgeChipFilter extends StatelessWidget {
       onTap: onTap,
       child: Chip(
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        padding: EdgeInsets.all(4.0),
+        padding: const EdgeInsets.all(4.0),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
             side: BorderSide(color: selected ? Colors.red : Colors.black87)

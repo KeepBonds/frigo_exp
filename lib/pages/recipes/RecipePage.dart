@@ -42,26 +42,13 @@ class _RecipePageController extends State<RecipePage> {
 class _RecipePageView extends WidgetView<RecipePage, _RecipePageController> {
   _RecipePageView(_RecipePageController state) : super(state);
 
-  Widget getMealTypeIcon(MealType type) {
-    switch(type) {
-      case MealType.PtitDej:
-        return const Icon(Icons.emoji_food_beverage);
-      case MealType.Dessert:
-        return const Icon(Icons.icecream);
-      case MealType.Repas:
-      default:
-        return const Icon(Icons.dinner_dining);
-    }
-
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(height: 8.0,),
+          const SizedBox(height: 8.0,),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -239,6 +226,8 @@ class RecipeChipFilter extends StatelessWidget {
       borderRadius: BorderRadius.circular(15.0),
       onTap: onTap,
       child: Chip(
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        padding: const EdgeInsets.all(4.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
           side: BorderSide(color: selected ? Colors.red : Colors.black87)
