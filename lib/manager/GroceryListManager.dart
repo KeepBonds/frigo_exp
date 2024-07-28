@@ -23,7 +23,7 @@ class GroceryListManager {
     return _manager ??= GroceryListManager._internal();
   }
 
-  loadListFromApi() async {
+  Future<void> loadListFromApi() async {
     if(lastLoaded != null && DateTime.now().difference(lastLoaded!).compareTo(const Duration(minutes: 5)) < 0) {
       await loadListFromCache();
       return;
@@ -48,7 +48,7 @@ class GroceryListManager {
     saveListToCache();
   }
 
-  loadListFromCache() async {
+  Future<void> loadListFromCache() async {
     String cacheString = await StorageHelperManager.getString(StorageKeys.groceryList) ?? "";
     if(cacheString.isNotEmpty) {
       List<dynamic> encoded = jsonDecode(cacheString);
@@ -62,7 +62,7 @@ class GroceryListManager {
     }
   }
 
-  saveListToCache() async {
+  Future<void> saveListToCache() async {
     List<Map<String, dynamic>> encode = [];
     for (GroceryList element in _lists) {
       encode.add(element.toJson());
@@ -72,7 +72,7 @@ class GroceryListManager {
     await StorageHelperManager.setString(StorageKeys.groceryList, listoJson);
   }
 
-  saveListToApi(GroceryList? list, String name, List<GroceryItem> items) async {
+  Future<void> saveListToApi(GroceryList? list, String name, List<GroceryItem> items) async {
     String todayDate = DateFormat("yyyy/MM/dd hh:mm:ss").format(DateTime.now());
     
     Map<String, dynamic> data = {};
@@ -116,7 +116,7 @@ class GroceryListManager {
 
 
   Future<void> deleteAPI(GroceryList list) async {
-    Response deleteResponse = await ApiManager(
+    await ApiManager(
         apiMethod: ApiMethod.DELETE,
         url: "https://www.ragic.com/acdu92/grocery/4/${list.ragicId}",
     ).call();

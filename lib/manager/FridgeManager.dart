@@ -36,7 +36,7 @@ class FridgeManager {
     }
   }
 
-  addProducts(List<FridgeProduct> selectedProducts) {
+  void addProducts(List<FridgeProduct> selectedProducts) {
     List<FridgeProduct> updatedProducts = [];
     for(FridgeProduct fridgeProduct in selectedProducts) {
       FridgeProduct p = fridgeProduct;
@@ -47,12 +47,12 @@ class FridgeManager {
     saveProducts(_products);
   }
 
-  removeProducts(FridgeProduct selectedProducts) {
+  void removeProducts(FridgeProduct selectedProducts) {
     _products.remove(selectedProducts);
     saveProducts(_products);
   }
 
-  updateQuantityProducts(FridgeProduct product, int quantity) {
+  void updateQuantityProducts(FridgeProduct product, int quantity) {
     if(quantity == 0) {
       removeProducts(product);
     } else {
@@ -62,14 +62,14 @@ class FridgeManager {
     saveProducts(_products);
   }
 
-  updateTime(FridgeProduct product, DateTime time) {
+  void updateTime(FridgeProduct product, DateTime time) {
     int index = _products.indexOf(product);
     _products[index].timeOfPurchase = time;
 
     saveProducts(_products);
   }
 
-  saveProducts(List<FridgeProduct> products) async {
+  Future<void> saveProducts(List<FridgeProduct> products) async {
     _products = products;
 
     List<Map<String, dynamic>> encode = [];
@@ -81,7 +81,7 @@ class FridgeManager {
     await StorageHelperManager.setString("Products", productsToJson);
   }
 
-  loadSettings() async {
+  Future<void> loadSettings() async {
     await loadProducts();
   }
 }

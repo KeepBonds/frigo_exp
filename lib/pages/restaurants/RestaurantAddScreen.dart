@@ -1,12 +1,9 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:frigo_exp/helper/FileHelper.dart';
 import 'package:frigo_exp/manager/manager.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../elements/elements.dart';
-import '../../helper/UploadFileHelper.dart';
 import '../../objects/objects.dart';
 
 class RestaurantAddScreen extends StatefulWidget {

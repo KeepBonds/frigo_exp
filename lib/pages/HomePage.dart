@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frigo_exp/elements/FontAwesomeIcons.dart';
 import 'pages.dart';
 import '../manager/manager.dart';
 
@@ -94,24 +95,24 @@ class _MyHomePageState extends State<MyHomePage> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             label: "",
-            icon: Icon(Icons.icecream_outlined),
-            activeIcon: Icon(Icons.icecream),
+            icon: Icon(FontAwesome.fridge),
+            activeIcon: Icon(FontAwesome.fridgeSolid),
           ),
           BottomNavigationBarItem(
             label: "",
-            icon: Icon(Icons.cookie_outlined),
-            activeIcon: Icon(Icons.cookie,),
+            icon: Icon(FontAwesome.knife),
+            activeIcon: Icon(FontAwesome.knifeSolid),
 
           ),
           BottomNavigationBarItem(
             label: "",
-            icon: Icon(Icons.checklist_rtl),
-            activeIcon: Icon(Icons.checklist_rtl),
+            icon: Icon(FontAwesome.listCheck),
+            activeIcon: Icon(FontAwesome.listCheckSolid),
           ),
           BottomNavigationBarItem(
             label: "",
-            icon: Icon(Icons.restaurant),
-            activeIcon: Icon(Icons.restaurant),
+            icon: Icon(FontAwesome.ustensils),
+            activeIcon: Icon(FontAwesome.ustensilsSolid),
           ),
         ],
         showSelectedLabels: false,

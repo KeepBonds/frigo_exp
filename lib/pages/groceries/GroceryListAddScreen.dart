@@ -68,7 +68,7 @@ class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
     if(index == controllers.length-1) {
       onAddNewLine(val, index);
     } else {
-      controllers[index].item.name = val ?? "";
+      controllers[index].item.name = val;
     }
     setState(() {});
   }
@@ -124,7 +124,7 @@ class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
     setState(() {});
   }
 
-  onSave() {
+  onSave() async {
     String name = nameController.text;
 
     List<GroceryItem> saveItems = [];
@@ -134,11 +134,16 @@ class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
     }
 
     if(widget.groceryList != null) {
-      GroceryListManager.getState().saveListToApi(widget.groceryList, name, saveItems);
+      await GroceryListManager.getState().saveListToApi(widget.groceryList, name, saveItems);
+      //add to fridge
     } else {
-      GroceryListManager.getState().saveListToApi(null, name, saveItems);
+      await GroceryListManager.getState().saveListToApi(null, name, saveItems);
+      //add to fridge
     }
     Navigator.pop(context);
+  }
+
+  addToFridge() {
   }
 
   OverlayEntry? _overlayEntry;
@@ -176,7 +181,6 @@ class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
   }
 
   void scrollUp() {
-    print("SCROLL TO ${scrollController.offset - 50}");
     scrollController.animateTo(scrollController.offset + 50, duration: Duration(milliseconds: 100), curve: Curves.fastOutSlowIn,);
   }
 
