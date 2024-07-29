@@ -38,7 +38,9 @@ class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
     nameController = TextEditingController(text: widget.groceryList != null ? widget.groceryList!.name : "");
 
     if(widget.groceryList != null) {
-      items.addAll(widget.groceryList!.items);
+      //items = List.from(widget.groceryList!.items);
+      items = widget.groceryList!.items.map((item) => GroceryItem.copy(item)).toList();
+
       items.sort((a, b) => a.seq.compareTo(b.seq));
     }
 
@@ -104,7 +106,12 @@ class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
   onChecked(bool? check, int index) {
     if(check == null) return;
 
+    print("ON CHECK BF : ${controllers[index].item.name} ${controllers[index].item.checked} => ${widget.groceryList!.items[index].name} ${widget.groceryList!.items[index].checked} ");
+
     controllers[index].item.checked = check;
+
+    print("ON CHECK AF : ${controllers[index].item.name} ${controllers[index].item.checked} => ${widget.groceryList!.items[index].name} ${widget.groceryList!.items[index].checked} ");
+
     setState(() {});
   }
 
@@ -134,16 +141,80 @@ class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
     }
 
     if(widget.groceryList != null) {
-      await GroceryListManager.getState().saveListToApi(widget.groceryList, name, saveItems);
-      //add to fridge
+      List<FridgeProduct> addProductList = await addToFridge(widget.groceryList, saveItems);
+      List<GroceryItem> deletedItems = deletedToFridge(saveItems);
+      await GroceryListManager.getState().saveListToApi(widget.groceryList, name, saveItems, deletedItems);
+      await confirmAddToFridge(addProductList);
     } else {
-      await GroceryListManager.getState().saveListToApi(null, name, saveItems);
-      //add to fridge
+      List<FridgeProduct> addProductList = await addToFridge(null, saveItems);
+      await GroceryListManager.getState().saveListToApi(null, name, saveItems, []);
+      await confirmAddToFridge(addProductList);
     }
     Navigator.pop(context);
   }
 
-  addToFridge() {
+  Future<void> confirmAddToFridge(List<FridgeProduct> addProductList) async {
+    if(addProductList.isNotEmpty) {
+      bool confirmAdd = await showDialog(context: context, builder: (context) {
+        return AlertDialog(
+          title: Text("Add to Fridge ?"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for(FridgeProduct p in addProductList) ListTile(title: Text(p.name), leading: Image(image: AssetImage(p.assetName),),),
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context, true), child: const Text("Yes")),
+            TextButton(onPressed: () => Navigator.pop(context, false), child: const Text("No")),
+          ],
+        );
+      });
+      if(confirmAdd) {
+        FridgeManager.getState().addProducts(addProductList);
+      }
+    }
+  }
+
+  Future<List<FridgeProduct>> addToFridge(GroceryList? groceryList, List<GroceryItem> saveItems) async {
+    List<FridgeProduct> products = getList();
+    List<FridgeProduct> addProductList = [];
+
+    // check if item was not checked and is now checked
+    for(GroceryItem item in saveItems) {
+      bool add = false;
+      if(widget.groceryList != null) {
+        List<GroceryItem> iteItem = widget.groceryList!.items.where((element) => element.ragicId == item.ragicId).toList();
+        if(iteItem.isNotEmpty && !iteItem.first.checked && item.checked) {
+          add = true;
+        }
+      } else if(groceryList == null && item.checked) {
+        add = true;
+      }
+      if(add) {
+        //List<FridgeProduct> prodMatch = products.where((prod) => prod.name == item.name).toList();
+        List<FridgeProduct> prodMatch = products.where((prod) {
+          return prod.name == item.name.replaceAll('\u200B', "");
+        }).toList();
+        if(prodMatch.isNotEmpty) {
+          addProductList.add(prodMatch.first);
+        }
+      }
+    }
+    return addProductList;
+  }
+
+  List<GroceryItem> deletedToFridge(List<GroceryItem> saveItems) {
+    if(widget.groceryList == null) return [];
+
+    // check if item was not checked and is now checked
+    List<GroceryItem> deleteProductList = [];
+    for(GroceryItem item in widget.groceryList!.items) {
+      if(saveItems.where((element) => element.ragicId == item.ragicId).isEmpty) {
+        deleteProductList.add(item);
+      }
+    }
+    return deleteProductList;
   }
 
   OverlayEntry? _overlayEntry;

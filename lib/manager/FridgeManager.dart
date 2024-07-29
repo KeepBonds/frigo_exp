@@ -37,6 +37,8 @@ class FridgeManager {
   }
 
   void addProducts(List<FridgeProduct> selectedProducts) {
+    if(selectedProducts.isEmpty) return;
+
     List<FridgeProduct> updatedProducts = [];
     for(FridgeProduct fridgeProduct in selectedProducts) {
       FridgeProduct p = fridgeProduct;

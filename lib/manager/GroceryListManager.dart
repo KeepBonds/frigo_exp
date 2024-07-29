@@ -72,7 +72,7 @@ class GroceryListManager {
     await StorageHelperManager.setString(StorageKeys.groceryList, listoJson);
   }
 
-  Future<void> saveListToApi(GroceryList? list, String name, List<GroceryItem> items) async {
+  Future<void> saveListToApi(GroceryList? list, String name, List<GroceryItem> items, List<GroceryItem> deletedItems) async {
     String todayDate = DateFormat("yyyy/MM/dd hh:mm:ss").format(DateTime.now());
     
     Map<String, dynamic> data = {};
@@ -82,43 +82,46 @@ class GroceryListManager {
     data["1000310"] = todayDate;
 
     Map<String, dynamic> subTableData = {};
-    for(int i = 0 ; i<items.length ; i++) {
-      if(items[i].ragicId == -1) {
-        items[i].ragicId = -(1000-i);
+    for (int i = 0; i < items.length; i++) {
+      if (items[i].ragicId == -1) {
+        items[i].ragicId = -(1000 - i);
       }
       subTableData[items[i].ragicId.toString()] = items[i].toApi();
     }
     data['_subtable_1000314'] = subTableData;
 
+    Map<String, dynamic> parameters = {};
+    parameters["v"] = "3";
+    parameters["api"] = true;
+    for (GroceryItem item in deletedItems) {
+      if (item.ragicId >= 0) {
+        parameters["DELSUB_1000314"] = item.ragicId;
+      }
+    }
+
     Response saveResponse = await ApiManager(
         apiMethod: ApiMethod.POST,
         url: "https://www.ragic.com/acdu92/grocery/4/${(list?.ragicId ?? -1)}",
-        parameters: ApiParameters.saveData,
+        parameters: parameters,
         postData: data
     ).call();
 
-    if(list != null) {
+    if (list != null) {
       int ind = lists.indexWhere((element) => list.ragicId == element.ragicId);
-      if(ind != -1) {
+      if (ind != -1) {
         lists[ind] = GroceryList.fromApi(saveResponse.data['data']);
       }
     } else {
-      GroceryList newList = GroceryList(
-        ragicId: saveResponse.data["ragicId"] ?? -1,
-        name: name,
-        date: todayDate,
-        items: items,
-      );
+      GroceryList newList = GroceryList.fromApi(saveResponse.data['data']);
       _lists.add(newList);
     }
     saveListToCache();
   }
 
-
   Future<void> deleteAPI(GroceryList list) async {
     await ApiManager(
-        apiMethod: ApiMethod.DELETE,
-        url: "https://www.ragic.com/acdu92/grocery/4/${list.ragicId}",
+      apiMethod: ApiMethod.DELETE,
+      url: "https://www.ragic.com/acdu92/grocery/4/${list.ragicId}",
     ).call();
     _lists.removeWhere((l) => l.ragicId == list.ragicId);
     saveListToCache();

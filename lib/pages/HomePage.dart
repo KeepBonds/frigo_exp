@@ -92,38 +92,37 @@ class _MyHomePageState extends State<MyHomePage> {
         RestaurantPage()
       ].elementAt(pageIndex),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            label: "",
-            icon: Icon(FontAwesome.fridge),
-            activeIcon: Icon(FontAwesome.fridgeSolid),
+            label: "Fridge",
+            icon: Icon(FontAwesome.fridge, size: 22,),
+            activeIcon: Icon(FontAwesome.fridgeSolid, size: 22),
           ),
           BottomNavigationBarItem(
-            label: "",
-            icon: Icon(FontAwesome.knife),
-            activeIcon: Icon(FontAwesome.knifeSolid),
-
+            label: "Recipe",
+            icon: Icon(FontAwesome.knife, size: 22),
+            activeIcon: Icon(FontAwesome.knifeSolid, size: 22),
           ),
           BottomNavigationBarItem(
-            label: "",
-            icon: Icon(FontAwesome.listCheck),
-            activeIcon: Icon(FontAwesome.listCheckSolid),
+            label: "List",
+            icon: Icon(FontAwesome.listCheck, size: 22),
+            activeIcon: Icon(FontAwesome.listCheckSolid, size: 22),
           ),
           BottomNavigationBarItem(
-            label: "",
-            icon: Icon(FontAwesome.ustensils),
-            activeIcon: Icon(FontAwesome.ustensilsSolid),
+            label: "Shops",
+            icon: Icon(FontAwesome.ustensils, size: 22),
+            activeIcon: Icon(FontAwesome.ustensilsSolid, size: 22),
           ),
         ],
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
         unselectedIconTheme: IconThemeData(
           color: Colors.grey[700],
         ),
         //selectedIconTheme: IconThemeData(
         //  color: appBarMainTheme,
         //),
-        type: BottomNavigationBarType.fixed,
         currentIndex: pageIndex,
         onTap: onItemTapped,
       ),

@@ -68,7 +68,7 @@ class _RecipePageView extends WidgetView<RecipePage, _RecipePageController> {
               const SizedBox(width: 8.0,),
               RecipeChipFilter(
                 selected: state.mealTypeFiler == MealType.Dessert,
-                text: "Dinner",
+                text: "Dessert",
                 icon: Icons.icecream,
                 onTap: () => state.onPressedFilter(MealType.Dessert),
               ),

@@ -13,6 +13,8 @@ class GroceryItem {
     required this.checked,
   });
 
+  GroceryItem.copy(GroceryItem other) : ragicId = other.ragicId, listId = other.listId, name = other.name, seq = other.seq, checked = other.checked;
+
   GroceryItem.mock()
       : ragicId = -100000000,
         listId = -100000000,
