@@ -7,8 +7,9 @@ import '../../objects/objects.dart';
 class GroceryItemController {
   GroceryItem item;
   TextEditingController controller;
+  FocusNode focusNode;
 
-  GroceryItemController(this.item, this.controller);
+  GroceryItemController(this.item, this.controller, this.focusNode);
 }
 
 class GroceryListAddScreen extends StatefulWidget {
@@ -46,9 +47,9 @@ class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
 
     const String invisibleChar = '\u200B';
     for(GroceryItem item in items) {
-      controllers.add(GroceryItemController(item, TextEditingController(text: invisibleChar + item.name)));
+      controllers.add(GroceryItemController(item, TextEditingController(text: invisibleChar + item.name), FocusNode()));
     }
-    controllers.add(GroceryItemController(GroceryItem.mock(), TextEditingController(text: invisibleChar)));
+    controllers.add(GroceryItemController(GroceryItem.mock(), TextEditingController(text: invisibleChar), FocusNode()));
   }
 
   onChanged(String? val, int index) {
@@ -58,6 +59,7 @@ class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
       controllers[index].item.name = val.replaceAll("\n", "");
       controllers[index].controller.text = val.replaceAll("\n", "");
       onAddNewLine(val, index);
+      controllers[index+1].focusNode.requestFocus();
       setState(() {});
       return;
     }
@@ -97,21 +99,15 @@ class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
     const String invisibleChar = '\u200B';
 
     if(index == controllers.length - 1) {
-      controllers.add(GroceryItemController(GroceryItem.mock(), TextEditingController(text: invisibleChar)));
+      controllers.add(GroceryItemController(GroceryItem.mock(), TextEditingController(text: invisibleChar), FocusNode()));
     } else {
-      controllers.insert(newLineIndex, GroceryItemController(GroceryItem.mock(), TextEditingController(text: invisibleChar)));
+      controllers.insert(newLineIndex, GroceryItemController(GroceryItem.mock(), TextEditingController(text: invisibleChar), FocusNode()));
     }
   }
 
   onChecked(bool? check, int index) {
     if(check == null) return;
-
-    print("ON CHECK BF : ${controllers[index].item.name} ${controllers[index].item.checked} => ${widget.groceryList!.items[index].name} ${widget.groceryList!.items[index].checked} ");
-
     controllers[index].item.checked = check;
-
-    print("ON CHECK AF : ${controllers[index].item.name} ${controllers[index].item.checked} => ${widget.groceryList!.items[index].name} ${widget.groceryList!.items[index].checked} ");
-
     setState(() {});
   }
 
@@ -334,6 +330,7 @@ class _GroceryListAddScreenView extends WidgetView<GroceryListAddScreen, _Grocer
                         Expanded(
                           child: SuggestionTextField(
                             textEditingController: state.controllers[index].controller,
+                            focusNode: state.controllers[index].focusNode,
                             index: index,
                             checked: state.controllers[index].item.checked,
                             showOverlay: state.showOverlay,
@@ -369,6 +366,7 @@ class _GroceryListAddScreenView extends WidgetView<GroceryListAddScreen, _Grocer
 
 class SuggestionTextField extends StatefulWidget {
   final TextEditingController textEditingController;
+  final FocusNode focusNode;
   final int index;
   final bool checked;
   final Function(Widget?) showOverlay;
@@ -377,7 +375,9 @@ class SuggestionTextField extends StatefulWidget {
   final Function(String?, int) onChanged;
 
   SuggestionTextField({
-    super.key, required this.textEditingController,
+    super.key,
+    required this.textEditingController,
+    required this.focusNode,
     required this.index,
     required this.checked,
     required this.showOverlay,
@@ -393,8 +393,6 @@ class SuggestionTextField extends StatefulWidget {
 class _SuggestionTextFieldState extends State<SuggestionTextField> {
   String editingValue = "";
   String currentWord = "";
-
-  FocusNode focusNode = FocusNode();
 
   @override
   void initState() {
@@ -422,8 +420,8 @@ class _SuggestionTextFieldState extends State<SuggestionTextField> {
       editingValue = widget.textEditingController.text;
     });
 
-    focusNode.addListener(() {
-      if(!focusNode.hasFocus) {
+    widget.focusNode.addListener(() {
+      if(!widget.focusNode.hasFocus) {
         currentWord = "";
         widget.hideOverlay();
       }
@@ -473,10 +471,10 @@ class _SuggestionTextFieldState extends State<SuggestionTextField> {
           enabledBorder: InputBorder.none
       ),
       style: widget.checked ? const TextStyle(decoration: TextDecoration.lineThrough) : null,
-      focusNode: focusNode,
+      focusNode: widget.focusNode,
       controller: widget.textEditingController,
       onChanged: (String? val) {
-        double offset = focusNode.offset.dy;
+        double offset = widget.focusNode.offset.dy;
         final viewInsets = EdgeInsets.fromViewPadding(WidgetsBinding.instance.window.viewInsets,WidgetsBinding.instance.window.devicePixelRatio);
         double screenHeight = MediaQuery.of(context).size.height;
 

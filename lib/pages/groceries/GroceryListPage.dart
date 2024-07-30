@@ -12,15 +12,30 @@ class GroceryListPage extends StatefulWidget {
 }
 
 class _GroceryListPageController extends State<GroceryListPage> {
+  bool loading = false;
+
   @override
   void initState() {
     super.initState();
     loadList();
   }
 
+  showLoading() {
+    setState(() {
+      loading = true;
+    });
+  }
+
+  hideLoading() {
+    setState(() {
+      loading = false;
+    });
+  }
+
   loadList() async {
+    showLoading();
     await GroceryListManager.getState().loadListFromApi();
-    setState(() {});
+    hideLoading();
   }
 
   onTap(GroceryList list) async {
@@ -57,39 +72,55 @@ class _GroceryListPageView extends WidgetView<GroceryListPage, _GroceryListPageC
 
   @override
   Widget build(BuildContext context) {
+    if(state.loading) {
+      return const SafeArea(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
     return SafeArea(
-      child: Container(
-        margin: const EdgeInsets.all(8.0),
-        child: StaggeredGrid.count(
-          crossAxisCount: 2,
-          children: GroceryListManager.getState().lists.map<Widget> ((item) {
-            return Card(
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(15.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if(item.name.isNotEmpty) Text(item.name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
-                        const SizedBox(height: 2,),
-                        Container(
-                          padding: EdgeInsets.only(left: 6.0, right: 6.0, top: 2.0),
-                          child: Text(item.getItemDisplay()),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: Text(item.date, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300, color: Colors.black54)),
-                        )
-                      ],
+      child: SingleChildScrollView(
+        child: Container(
+          margin: const EdgeInsets.all(8.0),
+          child: StaggeredGrid.count(
+            crossAxisCount: 2,
+            children: GroceryListManager.getState().lists.map<Widget> ((item) {
+              return Card(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(15.0),
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if(item.name.isNotEmpty) Text(item.name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                          const SizedBox(height: 2,),
+                          //Container(
+                          //  padding: const EdgeInsets.only(left: 6.0, right: 6.0, top: 2.0),
+                          //  child: Text(item.getItemDisplay()),
+                          //),
+                          Container(
+                            padding: const EdgeInsets.only(left: 6.0, right: 6.0, top: 2.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: item.getItemDisplayText(),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: Text(item.date, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w300, color: Colors.black54)),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  onTap: () => state.onTap(item),
-                  onLongPress: () => state.onLongPress(item),
-                )
-            );
-          }).toList(),
+                    onTap: () => state.onTap(item),
+                    onLongPress: () => state.onLongPress(item),
+                  )
+              );
+            }).toList(),
+          ),
         ),
       ),
     );

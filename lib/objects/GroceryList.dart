@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'GroceryItem.dart';
 
 class GroceryList {
@@ -20,6 +22,17 @@ class GroceryList {
 
     for(GroceryItem item in sortedList) {
       layout += ("${item.name}\n");
+    }
+    return layout;
+  }
+
+  List<Widget> getItemDisplayText() {
+    List<Widget> layout = [];
+    List<GroceryItem> sortedList = List.from(items);
+    sortedList.sort((a, b) => a.seq.compareTo(b.seq));
+
+    for(GroceryItem item in sortedList) {
+      layout.add(Text(item.name, style: TextStyle(decoration: item.checked ? TextDecoration.lineThrough: null),));
     }
     return layout;
   }
