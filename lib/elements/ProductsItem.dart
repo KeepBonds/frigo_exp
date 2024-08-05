@@ -33,7 +33,9 @@ class ProductsItem extends StatelessWidget {
     return InkWell(
       onTap: () => updateProductDate(product),
       child: Container(
-        padding: EdgeInsets.all(4.0),
+        width: 40,
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.all(4.0),
         child: Text("${beforeExpiry.inDays}d", style: TextStyle(color: color),),
       ),
     );
@@ -55,8 +57,8 @@ class ProductsItem extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(product.name),
-              Flexible(child: Row(
+              Expanded(child: Text(product.name)),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
@@ -84,7 +86,7 @@ class ProductsItem extends StatelessWidget {
                     onPressed:  () => onUpdateQuantity(product, product.quantity+1),
                   ),
                 ],
-              )),
+              ),
               differenceWidget()
             ],
           ),

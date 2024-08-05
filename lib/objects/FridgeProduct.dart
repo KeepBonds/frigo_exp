@@ -1,4 +1,5 @@
 class FridgeProduct {
+  int id;
   String name;
   int daysTillExpiry;
   String assetName;
@@ -7,6 +8,7 @@ class FridgeProduct {
   DateTime? timeOfPurchase;
 
   FridgeProduct({
+    required this.id,
     required this.name,
     required this.daysTillExpiry,
     required this.assetName,
@@ -17,6 +19,7 @@ class FridgeProduct {
 
   static FridgeProduct fromJson(Map<String, dynamic> json) {
     return FridgeProduct(
+        id: json["id"],
         name: json["name"],
         daysTillExpiry: json["daysTillExpiry"],
         assetName: json["assetName"],
@@ -27,11 +30,12 @@ class FridgeProduct {
   }
 
   Map<String, dynamic> toJson() =>{
-   "name": name,
-   "daysTillExpiry": daysTillExpiry,
-   "assetName": assetName,
+    "id": id,
+    "name": name,
+    "daysTillExpiry": daysTillExpiry,
+    "assetName": assetName,
     "type": type,
     "quantity": quantity,
-   "timeOfPurchase": timeOfPurchase?.toIso8601String() ?? "",
+    "timeOfPurchase": timeOfPurchase?.toIso8601String() ?? "",
   };
 }

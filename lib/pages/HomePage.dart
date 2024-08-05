@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frigo_exp/elements/FontAwesomeIcons.dart';
+import '../manager/NotificationService.dart';
 import 'pages.dart';
 import '../manager/manager.dart';
 

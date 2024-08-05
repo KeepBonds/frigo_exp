@@ -69,6 +69,9 @@ class Names {
   static const String name57 = 'Brown Sugar';
   static const String name58 = 'Almond Powder';
   static const String name59 = 'Flour';
+  static const String name60 = 'Ratatouille (Can)';
+
+
 }
 
 class ExpiryDays {
@@ -131,6 +134,7 @@ class ExpiryDays {
   static const int brownSugarExpiry = 365;
   static const int almondPowderExpiry = 365;
   static const int flourExpiry = 365;
+  static const int ratatouilleCanExpiry = 365;
 
   // Add methods for new products
   static int getExpiry(String name) {
@@ -194,71 +198,73 @@ class ExpiryDays {
       case Names.name57: return brownSugarExpiry;
       case Names.name58: return almondPowderExpiry;
       case Names.name59: return flourExpiry;
+      case Names.name59: return ratatouilleCanExpiry;
       default: return 0;
     }
   }
 }
 
 List<FridgeProduct> products = [
-  FridgeProduct(name: Names.name01, daysTillExpiry: ExpiryDays.getExpiry(Names.name01), assetName: "assets/images/tomato.png", type: ProductType.veggies),
-  FridgeProduct(name: Names.name02, daysTillExpiry: ExpiryDays.getExpiry(Names.name02), assetName: "assets/images/cucumber.png", type: ProductType.veggies),
-  FridgeProduct(name: Names.name03, daysTillExpiry: ExpiryDays.getExpiry(Names.name03), assetName: "assets/images/zucchini.png", type: ProductType.veggies),
-  FridgeProduct(name: Names.name04, daysTillExpiry: ExpiryDays.getExpiry(Names.name04), assetName: "assets/images/bellpepper.png", type: ProductType.veggies),
-  FridgeProduct(name: Names.name05, daysTillExpiry: ExpiryDays.getExpiry(Names.name05), assetName: "assets/images/milk.png", type: ProductType.dairy),
-  FridgeProduct(name: Names.name52, daysTillExpiry: ExpiryDays.getExpiry(Names.name52), assetName: "assets/images/soymilk.png", type: ProductType.dairy),
-  FridgeProduct(name: Names.name06, daysTillExpiry: ExpiryDays.getExpiry(Names.name06), assetName: "assets/images/egg.png", type: ProductType.dairy),
-  FridgeProduct(name: Names.name48, daysTillExpiry: ExpiryDays.getExpiry(Names.name48), assetName: "assets/images/eggyolk.png", type: ProductType.dairy),
-  FridgeProduct(name: Names.name07, daysTillExpiry: ExpiryDays.getExpiry(Names.name07), assetName: "assets/images/lettuce.png", type: ProductType.veggies),
-  FridgeProduct(name: Names.name08, daysTillExpiry: ExpiryDays.getExpiry(Names.name08), assetName: "assets/images/carrot.png", type: ProductType.veggies),
-  FridgeProduct(name: Names.name09, daysTillExpiry: ExpiryDays.getExpiry(Names.name09), assetName: "assets/images/apple.png", type: ProductType.fruit),
-  FridgeProduct(name: Names.name10, daysTillExpiry: ExpiryDays.getExpiry(Names.name10), assetName: "assets/images/watermelon.png", type: ProductType.fruit),
-  FridgeProduct(name: Names.name11, daysTillExpiry: ExpiryDays.getExpiry(Names.name11), assetName: "assets/images/yogurt.png", type: ProductType.dairy),
-  FridgeProduct(name: Names.name12, daysTillExpiry: ExpiryDays.getExpiry(Names.name12), assetName: "assets/images/potato.png", type: ProductType.carbs),
-  FridgeProduct(name: Names.name13, daysTillExpiry: ExpiryDays.getExpiry(Names.name13), assetName: "assets/images/sweetpotato.png", type: ProductType.carbs),
-  FridgeProduct(name: Names.name14, daysTillExpiry: ExpiryDays.getExpiry(Names.name14), assetName: "assets/images/bread.png", type: ProductType.carbs),
-  FridgeProduct(name: Names.name15, daysTillExpiry: ExpiryDays.getExpiry(Names.name15), assetName: "assets/images/mango.png", type: ProductType.fruit),
-  FridgeProduct(name: Names.name16, daysTillExpiry: ExpiryDays.getExpiry(Names.name16), assetName: "assets/images/cannedtuna.png", type: ProductType.other),
-  FridgeProduct(name: Names.name17, daysTillExpiry: ExpiryDays.getExpiry(Names.name17), assetName: "assets/images/pasta.png", type: ProductType.carbs),
-  FridgeProduct(name: Names.name18, daysTillExpiry: ExpiryDays.getExpiry(Names.name18), assetName: "assets/images/rice.png", type: ProductType.carbs),
-  FridgeProduct(name: Names.name19, daysTillExpiry: ExpiryDays.getExpiry(Names.name19), assetName: "assets/images/bacon.png", type: ProductType.meat),
-  FridgeProduct(name: Names.name20, daysTillExpiry: ExpiryDays.getExpiry(Names.name20), assetName: "assets/images/lentils.png", type: ProductType.carbs),
-  FridgeProduct(name: Names.name21, daysTillExpiry: ExpiryDays.getExpiry(Names.name21), assetName: "assets/images/sausage.png", type: ProductType.meat),
-  FridgeProduct(name: Names.name22, daysTillExpiry: ExpiryDays.getExpiry(Names.name22), assetName: "assets/images/greekyogurt.png", type: ProductType.dairy),
-  FridgeProduct(name: Names.name23, daysTillExpiry: ExpiryDays.getExpiry(Names.name23), assetName: "assets/images/chiaseed.png", type: ProductType.other),
-  FridgeProduct(name: Names.name24, daysTillExpiry: ExpiryDays.getExpiry(Names.name24), assetName: "assets/images/breadcrumbs.png", type: ProductType.other),
-  FridgeProduct(name: Names.name25, daysTillExpiry: ExpiryDays.getExpiry(Names.name25), assetName: "assets/images/paprika.png", type: ProductType.other),
-  FridgeProduct(name: Names.name26, daysTillExpiry: ExpiryDays.getExpiry(Names.name26), assetName: "assets/images/parmesan.png", type: ProductType.dairy),
-  FridgeProduct(name: Names.name27, daysTillExpiry: ExpiryDays.getExpiry(Names.name27), assetName: "assets/images/cauliflower.png", type: ProductType.veggies),
-  FridgeProduct(name: Names.name28, daysTillExpiry: ExpiryDays.getExpiry(Names.name28), assetName: "assets/images/strawberry.png", type: ProductType.fruit),
-  FridgeProduct(name: Names.name29, daysTillExpiry: ExpiryDays.getExpiry(Names.name29), assetName: "assets/images/shreddedcheese.png", type: ProductType.dairy),
-  FridgeProduct(name: Names.name30, daysTillExpiry: ExpiryDays.getExpiry(Names.name30), assetName: "assets/images/lasagna.png", type: ProductType.carbs),
-  FridgeProduct(name: Names.name31, daysTillExpiry: ExpiryDays.getExpiry(Names.name31), assetName: "assets/images/tomatosaucearrabiata.png", type: ProductType.other),
-  FridgeProduct(name: Names.name32, daysTillExpiry: ExpiryDays.getExpiry(Names.name32), assetName: "assets/images/onion.png", type: ProductType.veggies),
-  FridgeProduct(name: Names.name33, daysTillExpiry: ExpiryDays.getExpiry(Names.name33), assetName: "assets/images/groundbeef.png", type: ProductType.meat),
-  FridgeProduct(name: Names.name34, daysTillExpiry: ExpiryDays.getExpiry(Names.name34), assetName: "assets/images/lemon.png", type: ProductType.fruit),
-  FridgeProduct(name: Names.name35, daysTillExpiry: ExpiryDays.getExpiry(Names.name35), assetName: "assets/images/whitewine.png", type: ProductType.other),
-  FridgeProduct(name: Names.name36, daysTillExpiry: ExpiryDays.getExpiry(Names.name36), assetName: "assets/images/salmonfillet.png", type: ProductType.meat),
-  FridgeProduct(name: Names.name37, daysTillExpiry: ExpiryDays.getExpiry(Names.name37), assetName: "assets/images/maplesyrup.png", type: ProductType.other),
-  FridgeProduct(name: Names.name38, daysTillExpiry: ExpiryDays.getExpiry(Names.name38), assetName: "assets/images/peanutbutter.png", type: ProductType.other),
-  FridgeProduct(name: Names.name39, daysTillExpiry: ExpiryDays.getExpiry(Names.name39), assetName: "assets/images/patefeuilletee.png", type: ProductType.other),
-  FridgeProduct(name: Names.name40, daysTillExpiry: ExpiryDays.getExpiry(Names.name40), assetName: "assets/images/vanillaextract.png", type: ProductType.other),
-  FridgeProduct(name: Names.name41, daysTillExpiry: ExpiryDays.getExpiry(Names.name41), assetName: "assets/images/chocolatechips.png", type: ProductType.other),
-  FridgeProduct(name: Names.name42, daysTillExpiry: ExpiryDays.getExpiry(Names.name42), assetName: "assets/images/cocoapowder.png", type: ProductType.other),
-  FridgeProduct(name: Names.name43, daysTillExpiry: ExpiryDays.getExpiry(Names.name43), assetName: "assets/images/vanillacaseinpowder.png", type: ProductType.other),
-  FridgeProduct(name: Names.name44, daysTillExpiry: ExpiryDays.getExpiry(Names.name44), assetName: "assets/images/bakingpowder.png", type: ProductType.other),
-  FridgeProduct(name: Names.name45, daysTillExpiry: ExpiryDays.getExpiry(Names.name45), assetName: "assets/images/wheyproteincookiecream.png", type: ProductType.other),
-  FridgeProduct(name: Names.name46, daysTillExpiry: ExpiryDays.getExpiry(Names.name46), assetName: "assets/images/cinnamon.png", type: ProductType.other),
-  FridgeProduct(name: Names.name47, daysTillExpiry: ExpiryDays.getExpiry(Names.name47), assetName: "assets/images/vanillasugar.png", type: ProductType.other),
-  FridgeProduct(name: Names.name49, daysTillExpiry: ExpiryDays.getExpiry(Names.name49), assetName: "assets/images/freshcream.png", type: ProductType.dairy),
-  FridgeProduct(name: Names.name50, daysTillExpiry: ExpiryDays.getExpiry(Names.name50), assetName: "assets/images/darkchocolate.png", type: ProductType.other),
-  FridgeProduct(name: Names.name51, daysTillExpiry: ExpiryDays.getExpiry(Names.name51), assetName: "assets/images/oatmeal.png", type: ProductType.carbs),
-  FridgeProduct(name: Names.name56, daysTillExpiry: ExpiryDays.getExpiry(Names.name56), assetName: "assets/images/saltedbutter.png", type: ProductType.dairy),
-  FridgeProduct(name: Names.name53, daysTillExpiry: ExpiryDays.getExpiry(Names.name53), assetName: "assets/images/sugar.png", type: ProductType.other),
-  FridgeProduct(name: Names.name54, daysTillExpiry: ExpiryDays.getExpiry(Names.name54), assetName: "assets/images/blackpepper.png", type: ProductType.other),
-  FridgeProduct(name: Names.name55, daysTillExpiry: ExpiryDays.getExpiry(Names.name55), assetName: "assets/images/salt.png", type: ProductType.other),
-  FridgeProduct(name: Names.name57, daysTillExpiry: ExpiryDays.getExpiry(Names.name57), assetName: "assets/images/brownsugar.png", type: ProductType.other),
-  FridgeProduct(name: Names.name58, daysTillExpiry: ExpiryDays.getExpiry(Names.name58), assetName: "assets/images/almondpowder.png", type: ProductType.other),
-  FridgeProduct(name: Names.name59, daysTillExpiry: ExpiryDays.getExpiry(Names.name59), assetName: "assets/images/flour.png", type: ProductType.other),
+  FridgeProduct(id: 1, name: Names.name01, daysTillExpiry: ExpiryDays.getExpiry(Names.name01), assetName: "assets/images/tomato.png", type: ProductType.veggies),
+  FridgeProduct(id: 2, name: Names.name02, daysTillExpiry: ExpiryDays.getExpiry(Names.name02), assetName: "assets/images/cucumber.png", type: ProductType.veggies),
+  FridgeProduct(id: 3, name: Names.name03, daysTillExpiry: ExpiryDays.getExpiry(Names.name03), assetName: "assets/images/zucchini.png", type: ProductType.veggies),
+  FridgeProduct(id: 4, name: Names.name04, daysTillExpiry: ExpiryDays.getExpiry(Names.name04), assetName: "assets/images/bellpepper.png", type: ProductType.veggies),
+  FridgeProduct(id: 5, name: Names.name05, daysTillExpiry: ExpiryDays.getExpiry(Names.name05), assetName: "assets/images/milk.png", type: ProductType.dairy),
+  FridgeProduct(id: 52, name: Names.name52, daysTillExpiry: ExpiryDays.getExpiry(Names.name52), assetName: "assets/images/soymilk.png", type: ProductType.dairy),
+  FridgeProduct(id: 6, name: Names.name06, daysTillExpiry: ExpiryDays.getExpiry(Names.name06), assetName: "assets/images/egg.png", type: ProductType.dairy),
+  FridgeProduct(id: 48, name: Names.name48, daysTillExpiry: ExpiryDays.getExpiry(Names.name48), assetName: "assets/images/eggyolk.png", type: ProductType.dairy),
+  FridgeProduct(id: 7, name: Names.name07, daysTillExpiry: ExpiryDays.getExpiry(Names.name07), assetName: "assets/images/lettuce.png", type: ProductType.veggies),
+  FridgeProduct(id: 8, name: Names.name08, daysTillExpiry: ExpiryDays.getExpiry(Names.name08), assetName: "assets/images/carrot.png", type: ProductType.veggies),
+  FridgeProduct(id: 9, name: Names.name09, daysTillExpiry: ExpiryDays.getExpiry(Names.name09), assetName: "assets/images/apple.png", type: ProductType.fruit),
+  FridgeProduct(id: 10, name: Names.name10, daysTillExpiry: ExpiryDays.getExpiry(Names.name10), assetName: "assets/images/watermelon.png", type: ProductType.fruit),
+  FridgeProduct(id: 11, name: Names.name11, daysTillExpiry: ExpiryDays.getExpiry(Names.name11), assetName: "assets/images/yogurt.png", type: ProductType.dairy),
+  FridgeProduct(id: 12, name: Names.name12, daysTillExpiry: ExpiryDays.getExpiry(Names.name12), assetName: "assets/images/potato.png", type: ProductType.carbs),
+  FridgeProduct(id: 13, name: Names.name13, daysTillExpiry: ExpiryDays.getExpiry(Names.name13), assetName: "assets/images/sweetpotato.png", type: ProductType.carbs),
+  FridgeProduct(id: 14, name: Names.name14, daysTillExpiry: ExpiryDays.getExpiry(Names.name14), assetName: "assets/images/bread.png", type: ProductType.carbs),
+  FridgeProduct(id: 15, name: Names.name15, daysTillExpiry: ExpiryDays.getExpiry(Names.name15), assetName: "assets/images/mango.png", type: ProductType.fruit),
+  FridgeProduct(id: 16, name: Names.name16, daysTillExpiry: ExpiryDays.getExpiry(Names.name16), assetName: "assets/images/cannedtuna.png", type: ProductType.other),
+  FridgeProduct(id: 17, name: Names.name17, daysTillExpiry: ExpiryDays.getExpiry(Names.name17), assetName: "assets/images/pasta.png", type: ProductType.carbs),
+  FridgeProduct(id: 18, name: Names.name18, daysTillExpiry: ExpiryDays.getExpiry(Names.name18), assetName: "assets/images/rice.png", type: ProductType.carbs),
+  FridgeProduct(id: 19, name: Names.name19, daysTillExpiry: ExpiryDays.getExpiry(Names.name19), assetName: "assets/images/bacon.png", type: ProductType.meat),
+  FridgeProduct(id: 20, name: Names.name20, daysTillExpiry: ExpiryDays.getExpiry(Names.name20), assetName: "assets/images/lentils.png", type: ProductType.carbs),
+  FridgeProduct(id: 21, name: Names.name21, daysTillExpiry: ExpiryDays.getExpiry(Names.name21), assetName: "assets/images/sausage.png", type: ProductType.meat),
+  FridgeProduct(id: 22, name: Names.name22, daysTillExpiry: ExpiryDays.getExpiry(Names.name22), assetName: "assets/images/greekyogurt.png", type: ProductType.dairy),
+  FridgeProduct(id: 23, name: Names.name23, daysTillExpiry: ExpiryDays.getExpiry(Names.name23), assetName: "assets/images/chiaseed.png", type: ProductType.other),
+  FridgeProduct(id: 24, name: Names.name24, daysTillExpiry: ExpiryDays.getExpiry(Names.name24), assetName: "assets/images/breadcrumbs.png", type: ProductType.other),
+  FridgeProduct(id: 25, name: Names.name25, daysTillExpiry: ExpiryDays.getExpiry(Names.name25), assetName: "assets/images/paprika.png", type: ProductType.other),
+  FridgeProduct(id: 26, name: Names.name26, daysTillExpiry: ExpiryDays.getExpiry(Names.name26), assetName: "assets/images/parmesan.png", type: ProductType.dairy),
+  FridgeProduct(id: 27, name: Names.name27, daysTillExpiry: ExpiryDays.getExpiry(Names.name27), assetName: "assets/images/cauliflower.png", type: ProductType.veggies),
+  FridgeProduct(id: 28, name: Names.name28, daysTillExpiry: ExpiryDays.getExpiry(Names.name28), assetName: "assets/images/strawberry.png", type: ProductType.fruit),
+  FridgeProduct(id: 29, name: Names.name29, daysTillExpiry: ExpiryDays.getExpiry(Names.name29), assetName: "assets/images/shreddedcheese.png", type: ProductType.dairy),
+  FridgeProduct(id: 30, name: Names.name30, daysTillExpiry: ExpiryDays.getExpiry(Names.name30), assetName: "assets/images/lasagna.png", type: ProductType.carbs),
+  FridgeProduct(id: 31, name: Names.name31, daysTillExpiry: ExpiryDays.getExpiry(Names.name31), assetName: "assets/images/tomatosaucearrabiata.png", type: ProductType.other),
+  FridgeProduct(id: 32, name: Names.name32, daysTillExpiry: ExpiryDays.getExpiry(Names.name32), assetName: "assets/images/onion.png", type: ProductType.veggies),
+  FridgeProduct(id: 33, name: Names.name33, daysTillExpiry: ExpiryDays.getExpiry(Names.name33), assetName: "assets/images/groundbeef.png", type: ProductType.meat),
+  FridgeProduct(id: 34, name: Names.name34, daysTillExpiry: ExpiryDays.getExpiry(Names.name34), assetName: "assets/images/lemon.png", type: ProductType.fruit),
+  FridgeProduct(id: 35, name: Names.name35, daysTillExpiry: ExpiryDays.getExpiry(Names.name35), assetName: "assets/images/whitewine.png", type: ProductType.other),
+  FridgeProduct(id: 36, name: Names.name36, daysTillExpiry: ExpiryDays.getExpiry(Names.name36), assetName: "assets/images/salmonfillet.png", type: ProductType.meat),
+  FridgeProduct(id: 37, name: Names.name37, daysTillExpiry: ExpiryDays.getExpiry(Names.name37), assetName: "assets/images/maplesyrup.png", type: ProductType.other),
+  FridgeProduct(id: 38, name: Names.name38, daysTillExpiry: ExpiryDays.getExpiry(Names.name38), assetName: "assets/images/peanutbutter.png", type: ProductType.other),
+  FridgeProduct(id: 39, name: Names.name39, daysTillExpiry: ExpiryDays.getExpiry(Names.name39), assetName: "assets/images/patefeuilletee.png", type: ProductType.other),
+  FridgeProduct(id: 40, name: Names.name40, daysTillExpiry: ExpiryDays.getExpiry(Names.name40), assetName: "assets/images/vanillaextract.png", type: ProductType.other),
+  FridgeProduct(id: 41, name: Names.name41, daysTillExpiry: ExpiryDays.getExpiry(Names.name41), assetName: "assets/images/chocolatechips.png", type: ProductType.other),
+  FridgeProduct(id: 42, name: Names.name42, daysTillExpiry: ExpiryDays.getExpiry(Names.name42), assetName: "assets/images/cocoapowder.png", type: ProductType.other),
+  FridgeProduct(id: 43, name: Names.name43, daysTillExpiry: ExpiryDays.getExpiry(Names.name43), assetName: "assets/images/vanillacaseinpowder.png", type: ProductType.other),
+  FridgeProduct(id: 44, name: Names.name44, daysTillExpiry: ExpiryDays.getExpiry(Names.name44), assetName: "assets/images/bakingpowder.png", type: ProductType.other),
+  FridgeProduct(id: 45, name: Names.name45, daysTillExpiry: ExpiryDays.getExpiry(Names.name45), assetName: "assets/images/wheyproteincookiecream.png", type: ProductType.other),
+  FridgeProduct(id: 46, name: Names.name46, daysTillExpiry: ExpiryDays.getExpiry(Names.name46), assetName: "assets/images/cinnamon.png", type: ProductType.other),
+  FridgeProduct(id: 47, name: Names.name47, daysTillExpiry: ExpiryDays.getExpiry(Names.name47), assetName: "assets/images/vanillasugar.png", type: ProductType.other),
+  FridgeProduct(id: 49, name: Names.name49, daysTillExpiry: ExpiryDays.getExpiry(Names.name49), assetName: "assets/images/freshcream.png", type: ProductType.dairy),
+  FridgeProduct(id: 50, name: Names.name50, daysTillExpiry: ExpiryDays.getExpiry(Names.name50), assetName: "assets/images/darkchocolate.png", type: ProductType.other),
+  FridgeProduct(id: 51, name: Names.name51, daysTillExpiry: ExpiryDays.getExpiry(Names.name51), assetName: "assets/images/oatmeal.png", type: ProductType.carbs),
+  FridgeProduct(id: 56, name: Names.name56, daysTillExpiry: ExpiryDays.getExpiry(Names.name56), assetName: "assets/images/saltedbutter.png", type: ProductType.dairy),
+  FridgeProduct(id: 53, name: Names.name53, daysTillExpiry: ExpiryDays.getExpiry(Names.name53), assetName: "assets/images/sugar.png", type: ProductType.other),
+  FridgeProduct(id: 54, name: Names.name54, daysTillExpiry: ExpiryDays.getExpiry(Names.name54), assetName: "assets/images/blackpepper.png", type: ProductType.other),
+  FridgeProduct(id: 55, name: Names.name55, daysTillExpiry: ExpiryDays.getExpiry(Names.name55), assetName: "assets/images/salt.png", type: ProductType.other),
+  FridgeProduct(id: 57, name: Names.name57, daysTillExpiry: ExpiryDays.getExpiry(Names.name57), assetName: "assets/images/brownsugar.png", type: ProductType.other),
+  FridgeProduct(id: 58, name: Names.name58, daysTillExpiry: ExpiryDays.getExpiry(Names.name58), assetName: "assets/images/almondpowder.png", type: ProductType.other),
+  FridgeProduct(id: 59, name: Names.name59, daysTillExpiry: ExpiryDays.getExpiry(Names.name59), assetName: "assets/images/flour.png", type: ProductType.other),
+  FridgeProduct(id: 60, name: Names.name60, daysTillExpiry: ExpiryDays.getExpiry(Names.name60), assetName: "assets/images/ratatouille.png", type: ProductType.veggies),
 ];
 
 List<FridgeProduct> getFilteredList(List<String> types) {

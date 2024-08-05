@@ -1,7 +1,8 @@
 import 'dart:convert';
-
 import '../objects/FridgeProduct.dart';
 import '../cache/StorageHelperManager.dart';
+import 'NotificationService.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class FridgeManager {
   static FridgeManager? _manager;
@@ -44,12 +45,18 @@ class FridgeManager {
       FridgeProduct p = fridgeProduct;
       p.timeOfPurchase = DateTime.now();
       updatedProducts.add(p);
+
+      if(p.daysTillExpiry < 40) {
+        tz.TZDateTime expirationTime = tz.TZDateTime.now(tz.local).add(Duration(days: p.daysTillExpiry - 1));
+        NotificationService().scheduleNotification(id: p.id, title: '${fridgeProduct.name} expires soon', body: 'Quantity: ${fridgeProduct.quantity} left', scheduledNotificationDateTime: expirationTime);
+      }
     }
     _products.addAll(updatedProducts);
     saveProducts(_products);
   }
 
   void removeProducts(FridgeProduct selectedProducts) {
+    NotificationService().deleteScheduledNotification(selectedProducts.id);
     _products.remove(selectedProducts);
     saveProducts(_products);
   }
