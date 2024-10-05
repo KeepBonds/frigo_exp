@@ -6,13 +6,15 @@ class ProductsItem extends StatelessWidget {
   final Function(FridgeProduct) onDismissed;
   final Function(FridgeProduct, int) onUpdateQuantity;
   final Function(FridgeProduct) updateProductDate;
+  final Function(FridgeProduct) getRecipes;
 
   const ProductsItem({
     Key? key,
     required this.product,
     required this.onDismissed,
     required this.onUpdateQuantity,
-    required this.updateProductDate
+    required this.updateProductDate,
+    required this.getRecipes
   }) : super(key: key);
 
   Widget differenceWidget() {
@@ -46,10 +48,9 @@ class ProductsItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dismissible(
         key: Key(product.name+product.timeOfPurchase.toString()),
-        onDismissed: (direction) {
-          onDismissed(product);
-        },
+        onDismissed: (direction) => onDismissed(product),
         child: ListTile(
+          onLongPress: () => getRecipes(product),
           leading: Image(
             image: AssetImage(product.assetName),
           ),

@@ -31,6 +31,7 @@ class Names {
   static const String name17 = 'Pasta';
   static const String name18 = 'Rice';
   static const String name19 = 'Bacon';
+  static const String name61 = 'Ham';
   static const String name20 = 'Lentils';
   static const String name21 = 'Sausage';
   static const String name22 = 'Greek Yogurt';
@@ -96,6 +97,7 @@ class ExpiryDays {
   static const int pastaExpiry = 365;
   static const int riceExpiry = 365;
   static const int baconExpiry = 14;
+  static const int hamExpiry = 14;
   static const int lentilsExpiry = 365;
   static const int sausageExpiry = 14;
   static const int greekYogurtExpiry = 10;
@@ -199,6 +201,7 @@ class ExpiryDays {
       case Names.name58: return almondPowderExpiry;
       case Names.name59: return flourExpiry;
       case Names.name59: return ratatouilleCanExpiry;
+      case Names.name60: return hamExpiry;
       default: return 0;
     }
   }
@@ -226,6 +229,7 @@ List<FridgeProduct> products = [
   FridgeProduct(id: 17, name: Names.name17, daysTillExpiry: ExpiryDays.getExpiry(Names.name17), assetName: "assets/images/pasta.png", type: ProductType.carbs),
   FridgeProduct(id: 18, name: Names.name18, daysTillExpiry: ExpiryDays.getExpiry(Names.name18), assetName: "assets/images/rice.png", type: ProductType.carbs),
   FridgeProduct(id: 19, name: Names.name19, daysTillExpiry: ExpiryDays.getExpiry(Names.name19), assetName: "assets/images/bacon.png", type: ProductType.meat),
+  FridgeProduct(id: 61, name: Names.name61, daysTillExpiry: ExpiryDays.getExpiry(Names.name61), assetName: "assets/images/ham.png", type: ProductType.meat),
   FridgeProduct(id: 20, name: Names.name20, daysTillExpiry: ExpiryDays.getExpiry(Names.name20), assetName: "assets/images/lentils.png", type: ProductType.carbs),
   FridgeProduct(id: 21, name: Names.name21, daysTillExpiry: ExpiryDays.getExpiry(Names.name21), assetName: "assets/images/sausage.png", type: ProductType.meat),
   FridgeProduct(id: 22, name: Names.name22, daysTillExpiry: ExpiryDays.getExpiry(Names.name22), assetName: "assets/images/greekyogurt.png", type: ProductType.dairy),

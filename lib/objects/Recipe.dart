@@ -1,7 +1,15 @@
+import 'dart:io';
+
+import '../helper/UploadFileHelper.dart';
+import '../manager/manager.dart';
+
 enum MealType {
   Repas,
   Dessert,
   PtitDej,
+  Drinks,
+  Prep,
+  Test,
 }
 
 enum MeasureType {
@@ -16,6 +24,7 @@ enum MeasureType {
 }
 
 class Recipe {
+  int ragicId;
   String name = ""; // 1000231
   MealType type = MealType.Repas; // 1000220
   List<Ingredient> ingredients = []; // sub => _subtable_1000226
@@ -23,6 +32,7 @@ class Recipe {
   String image = ""; // 1000301
 
   Recipe({
+    required this.ragicId,
     required this.name,
     required this.type,
     required this.ingredients,
@@ -32,6 +42,7 @@ class Recipe {
 
   factory Recipe.fromApi(Map<String, dynamic> json) {
     return Recipe(
+      ragicId: json['_ragicId'] ?? -1000,
       name: json['1000231'] ?? "",
       type: getType(json['1000220']),
       image: json['1000301'] ?? "",
@@ -42,6 +53,7 @@ class Recipe {
 
   factory Recipe.fromJson(Map<String, dynamic> json) {
     return Recipe(
+      ragicId: json['ragicId'] ?? "",
       name: json['name'] ?? "",
       type: MealType.values[json['type'] ?? 0],
       image: json['image'] ?? "",
@@ -56,6 +68,7 @@ class Recipe {
 
   Map<String, dynamic> toJson() {
     return {
+      'ragicId': ragicId,
       'name': name,
       'type': type.index,
       'image': image,
@@ -74,6 +87,12 @@ class Recipe {
         return MealType.PtitDej;
       case "Dessert":
         return MealType.Dessert;
+      case "Drink":
+        return MealType.Drinks;
+      case "Test":
+        return MealType.Test;
+      case "Prep":
+        return MealType.Prep;
       case "Repas":
       default:
         return MealType.Repas;
@@ -103,11 +122,27 @@ class Recipe {
     }
     return [];
   }
+
+  saveImageApi(File image) async {
+    String url = 'https://www.ragic.com/acdu92/recettes/1/$ragicId';
+    // UPLOAD IMAGES
+    List<dynamic> uploadedImages = await UploadFileHelper.uploadPicture(url, "1000301", [image]);
+    // SAVE API
+    Map<String, dynamic> data = {};
+    data["1000301"] = uploadedImages;
+
+    Response saveResponse = await ApiManager(
+        apiMethod: ApiMethod.POST,
+        url: url,
+        parameters: ApiParameters.saveData,
+        postData: data
+    ).call();
+  }
 }
 
 class Ingredient {
   String name = ""; // 1000222
-  int dosage = -1; // 1000221
+  double dosage = -1; // 1000221
   MeasureType measure; // 1000232
 
   Ingredient({
@@ -119,7 +154,7 @@ class Ingredient {
   factory Ingredient.fromApi(Map<String, dynamic> json) {
     return Ingredient(
       name: json['1000222'] ?? "",
-      dosage: int.tryParse(json['1000221']) ?? -1,
+      dosage: double.tryParse(json['1000221']) ?? -1,
       measure: getType(json['1000232']),
     );
   }
@@ -141,6 +176,7 @@ class Ingredient {
   }
 
   static MeasureType getType(String? value) {
+    print("value $value");
     switch(value) {
       case "G":
         return MeasureType.G;
@@ -148,8 +184,10 @@ class Ingredient {
         return MeasureType.ML;
       case "CL":
         return MeasureType.CL;
+      case "tsp/cac/5ml":
       case "cac/5ml":
         return MeasureType.cac;
+      case "tbsp/cas/15ml":
       case "cas/15ml":
         return MeasureType.cas;
       case "Pinch":

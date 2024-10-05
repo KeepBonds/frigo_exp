@@ -53,6 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void onItemTapped(int index) {
+    RecipeManager.getState().itemFilter = null;
     setState(() {
       pageIndex = index;
     });
@@ -83,11 +84,17 @@ class _MyHomePageState extends State<MyHomePage> {
     return null;
   }
 
+  onGetRecipes() {
+    setState(() {
+      pageIndex = 1;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: [
-        FridgePage(),
+        FridgePage(onGetRecipes),
         RecipePage(),
         GroceryListPage(),
         RestaurantPage()

@@ -19,7 +19,7 @@ class FridgeProduct {
 
   static FridgeProduct fromJson(Map<String, dynamic> json) {
     return FridgeProduct(
-        id: json["id"],
+        id: json["id"] ?? -1,
         name: json["name"],
         daysTillExpiry: json["daysTillExpiry"],
         assetName: json["assetName"],

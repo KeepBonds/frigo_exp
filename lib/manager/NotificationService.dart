@@ -37,9 +37,7 @@ class NotificationService {
         ticker: 'ticker'
     );
     const NotificationDetails notificationDetails = NotificationDetails(android: androidNotificationDetails);
-    await notificationsPlugin.show(
-        id, 'Show notification', 'plain body', notificationDetails,
-        payload: 'item x');
+    await notificationsPlugin.show(id, 'Show notification', 'plain body', notificationDetails, payload: 'item x');
   }
 
   Future scheduleNotification({int id = 0, String? title, String? body, String? payLoad, tz.TZDateTime? scheduledNotificationDateTime}) async {

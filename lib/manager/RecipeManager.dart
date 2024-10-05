@@ -6,23 +6,50 @@ import '../objects/objects.dart';
 class RecipeManager {
   static RecipeManager? _manager;
 
+  DateTime? lastLoaded;
+
   List<Recipe> _recipes = [];
   List<Recipe> get recipes => _recipes;
 
+  List<Recipe> getRecipes(MealType? filterType) {
+    if(isItemFiltered) {
+      return getItemFilteredRecipes(filterType);
+    }
+    return getFilteredRecipes(filterType);
+  }
+
   List<Recipe> getFilteredRecipes(MealType? filterType) => filterType == null ? recipes : _recipes.where((element) => filterType == element.type).toList();
 
-  DateTime? lastLoaded;
+  FridgeProduct? itemFilter;
+  bool get isItemFiltered => itemFilter != null;
+  void clearItemFilter() => itemFilter = null;
+
+  List<Recipe> getItemFilteredRecipes(MealType? filterType) {
+    List<Recipe> itemFilteredRecipes = [];
+    if(itemFilter == null) return [];
+
+    for(Recipe recipe in recipes) {
+      if(recipe.ingredients.where((element) => element.name.toLowerCase() == itemFilter!.name.toLowerCase()).isNotEmpty) {
+        itemFilteredRecipes.add(recipe);
+      }
+    }
+    if(filterType != null) {
+      return itemFilteredRecipes.where((element) => filterType == element.type).toList();
+    }
+    return itemFilteredRecipes;
+  }
 
   RecipeManager._internal() {
     _recipes = [];
+    itemFilter = null;
   }
 
   static RecipeManager getState() {
     return _manager ??= RecipeManager._internal();
   }
 
-  loadRecipesFromApi() async {
-    if(lastLoaded != null && DateTime.now().difference(lastLoaded!).compareTo(const Duration(minutes: 5)) < 0) {
+  loadRecipesFromApi({bool force = false}) async {
+    if(!force && lastLoaded != null && DateTime.now().difference(lastLoaded!).compareTo(const Duration(minutes: 5)) < 0) {
       await loadRecipesFromCache();
       return;
     }
@@ -69,4 +96,6 @@ class RecipeManager {
     String recipesToJson = jsonEncode(encode);
     await StorageHelperManager.setString(StorageKeys.recipes, recipesToJson);
   }
+
+
 }

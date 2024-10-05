@@ -22,6 +22,13 @@ class GroceryItem {
         seq = -100000000,
         checked = false;
 
+  GroceryItem.create(int seq)
+      : ragicId = -1,
+        listId = -100000000,
+        name = "",
+        seq = seq,
+        checked = false;
+
   GroceryItem.fromApi(Map<String, dynamic> json, int parentListId)
       : ragicId = json['_ragicId'] ?? -1,
         listId = parentListId,

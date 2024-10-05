@@ -3,6 +3,9 @@ import '../../manager/manager.dart';
 import '../../objects/objects.dart';
 
 class FridgePage extends StatefulWidget {
+  final Function() onGetRecipes;
+  FridgePage(this.onGetRecipes);
+
   @override
   _FridgePageController createState() => _FridgePageController();
 }
@@ -33,6 +36,11 @@ class _FridgePageController extends State<FridgePage> {
     }
   }
 
+  onGetRecipes(FridgeProduct product) {
+    RecipeManager.getState().itemFilter = product;
+    widget.onGetRecipes();
+  }
+
   @override
   Widget build(BuildContext context) => _FridgePageView(this);
 }
@@ -50,6 +58,7 @@ class _FridgePageView extends WidgetView<FridgePage, _FridgePageController> {
             onDismissed: state.onDismissed,
             onUpdateQuantity: state.updateQuantityProducts,
             updateProductDate: state.updateProductDate,
+            getRecipes: state.onGetRecipes,
           );
         }
     );

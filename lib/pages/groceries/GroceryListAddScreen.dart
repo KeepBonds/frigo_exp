@@ -10,6 +10,11 @@ class GroceryItemController {
   FocusNode focusNode;
 
   GroceryItemController(this.item, this.controller, this.focusNode);
+
+  @override
+  String toString() {
+    return "|${item.name}, ${item.ragicId}, ${item.seq}, ${controller.text}|\n";
+  }
 }
 
 class GroceryListAddScreen extends StatefulWidget {
@@ -49,16 +54,19 @@ class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
     for(GroceryItem item in items) {
       controllers.add(GroceryItemController(item, TextEditingController(text: invisibleChar + item.name), FocusNode()));
     }
-    controllers.add(GroceryItemController(GroceryItem.mock(), TextEditingController(text: invisibleChar), FocusNode()));
+
+    controllers.add(GroceryItemController(GroceryItem.create(controllers.length), TextEditingController(text: invisibleChar), FocusNode()));
   }
 
   onChanged(String? val, int index) {
+    print(controllers.toString());
+
     if(val == null) return;
     print("VAL:" + val + "|  SS? | " + val.length.toString()  );
     if(val.contains("\n")) {
       controllers[index].item.name = val.replaceAll("\n", "");
       controllers[index].controller.text = val.replaceAll("\n", "");
-      onAddNewLine(val, index);
+      onAddNewLine(val.replaceAll("\n", ""), index);
       controllers[index+1].focusNode.requestFocus();
       setState(() {});
       return;
@@ -79,13 +87,19 @@ class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
 
   onAddNewLine(val, index) {
     int newLineIndex = index;
+    print("NEW INDEX  = " + (index + 1).toString());
     if(index == controllers.length - 1) {
       newLineIndex = index + 1;
     } else {
       newLineIndex = index + 1;
-      for(GroceryItemController gc in controllers) {
-        gc.item.seq = gc.item.seq+1;
+      print("NEW INDEX 2 $index - ${controllers.length}");
+
+      for(int i = index ; i < controllers.length ; i++) {
+        controllers[i].item.seq = controllers[i].item.seq + 1;
       }
+      // for(GroceryItemController gc in controllers) {
+      //  gc.item.seq = gc.item.seq+1;
+      //}
     }
 
     GroceryItem newItem = GroceryItem(
@@ -99,9 +113,9 @@ class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
     const String invisibleChar = '\u200B';
 
     if(index == controllers.length - 1) {
-      controllers.add(GroceryItemController(GroceryItem.mock(), TextEditingController(text: invisibleChar), FocusNode()));
+      controllers.add(GroceryItemController(GroceryItem.create(controllers[index].item.seq+1), TextEditingController(text: invisibleChar), FocusNode()));
     } else {
-      controllers.insert(newLineIndex, GroceryItemController(GroceryItem.mock(), TextEditingController(text: invisibleChar), FocusNode()));
+      controllers.insert(newLineIndex, GroceryItemController(GroceryItem.create(controllers[index].item.seq+1), TextEditingController(text: invisibleChar), FocusNode()));
     }
   }
 
@@ -132,7 +146,7 @@ class _GroceryListAddScreenController extends State<GroceryListAddScreen> {
 
     List<GroceryItem> saveItems = [];
     for(GroceryItemController controller in controllers) {
-      if(controller.item.ragicId == -100000000) continue;
+      if(controller.item.ragicId == -100000000 || controller.controller.text == '\u200B') continue;
       saveItems.add(controller.item);
     }
 
